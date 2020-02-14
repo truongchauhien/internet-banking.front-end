@@ -16,13 +16,18 @@ module.exports = {
             }
         ]
     },
+    resolve: {
+        extensions: ['.js', '.jsx']
+    },
     output: {
         path: __dirname + '/public',
         publicPath: '/assets/',
         filename: 'bundle.js'
     },
+    devtool: 'source-map',
     devServer: {
         contentBase: './public',
+        historyApiFallback: true,
         hot: true
     }
 };
