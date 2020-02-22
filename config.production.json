@@ -1,0 +1,6 @@
+{
+    "env": "production",
+    "useHttps": true,
+    "apiHost": "localhost",
+    "apiPort": "3000"
+}
