@@ -2,5 +2,6 @@
     "env": "development",
     "useHttps": false,
     "apiHost": "localhost",
-    "apiPort": "3000"
+    "apiPort": "3000",
+    "reCaptchaSiteKey": "6LdL4D8UAAAAAG8kdOF_KOt5tv3OHcckfUWnWy64"
 }
