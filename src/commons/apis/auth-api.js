@@ -9,7 +9,7 @@ import request from "./commons/api-request"
 const fetchLogin = (payload) => {
     return request({
         method: 'POST',
-        resource: 'auth/login',
+        resource: '/auth/login',
         useAccessToken: false,
         body: payload
     });

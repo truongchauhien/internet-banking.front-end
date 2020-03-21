@@ -24,7 +24,7 @@ const buildQueryString = (params) => {
 
 const buildUrl = (useHttps, host, port, path, params) => {
     const queryString = buildQueryString(params);
-    return `${useHttps ? 'https' : 'http'}://${host}:${port}/${path}${queryString ? ('?' + queryString) : ''}`;
+    return `${useHttps ? 'https' : 'http'}://${host}:${port}${path}${queryString ? ('?' + queryString) : ''}`;
 };
 
 /**
