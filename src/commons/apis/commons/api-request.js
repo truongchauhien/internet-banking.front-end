@@ -77,21 +77,23 @@ const request = async (options) => {
     }
 
     const url = buildUrl(USE_HTTPS, API_HOST, API_PORT, resource, params);
-    let response;
-    try {
-        response = await fetch(url, {
-            mode: 'cors',
-            method: method,
-            headers: headers,
-            body: JSON.stringify(body)
-        });
-    } catch {
-        return Promise.reject('Something went wrong while fetching api!');
+    const response = await fetch(url, {
+        mode: 'cors',
+        method: method,
+        headers: headers,
+        body: JSON.stringify(body)
+    });
+
+    let returnBody = {};
+    const responseContentType = response.headers.get('content-type');
+    if (responseContentType && responseContentType.includes('application/json')) {
+        returnBody = await response.json();
     }
 
     return {
-        body: (method === 'HEAD') ? {} : await response.json(),
-        status: response.status
+        body: returnBody,
+        status: response.status,
+        ok: response.ok
     };
 };
 
