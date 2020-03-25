@@ -1,4 +1,4 @@
-import request from "./commons/api-request"
+import request from "./commons/api-request";
 
 /**
  * 
@@ -6,7 +6,7 @@ import request from "./commons/api-request"
  * @param {string} payload.userName
  * @param {string} payload.password
  */
-const fetchLogin = (payload) => {
+export const fetchLogin = (payload) => {
     return request({
         method: 'POST',
         resource: '/auth/login',
@@ -15,4 +15,18 @@ const fetchLogin = (payload) => {
     });
 }
 
-export { fetchLogin };
+/**
+ * 
+ * @param {object} payload
+ * @param {string} payload.userType
+ * @param {string} payload.userId
+ * @param {string} payload.refreshToken
+ */
+export const fetchNewAccessToken = (payload) => {
+    return request({
+        method: 'POST',
+        resource: '/auth/token',
+        body: payload,
+        useAccessToken: false
+    });
+};
