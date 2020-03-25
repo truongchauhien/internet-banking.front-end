@@ -1,4 +1,5 @@
 import jwtdecode from 'jwt-decode';
+import { fetchNewAccessToken } from '../auth-api';
 
 const convertToString = (value) => {
     // TODO:
@@ -49,27 +50,30 @@ const request = async (options) => {
         }
 
         const expireAt = new Date(Number.parseInt(expireAtValue));
-        const difference = Date.now() - expireAt.getTime();
-        const minutesLeft = difference / 1000 / 60;
+        const differenceMiliseconds = expireAt.getTime() - Date.now();
+        const differenceMinutes = differenceMiliseconds / 1000 / 60;
 
-        if (minutesLeft <= 0.5) {
+        if (differenceMinutes <= 0.5) {
             const userId = localStorage.getItem('user-id');
+            const userType = localStorage.getItem('user-type');
             const refreshToken = localStorage.getItem('refresh-token');
-            const response = await request({
-                requestMethod: 'POST',
-                resource: '/token',
-                body: {
-                    userId,
-                    refreshToken
-                },
-                isTokenIncluded: false
+            const response = await fetchNewAccessToken({
+                userId,
+                userType,
+                refreshToken
             });
 
-            const { refreshToken: newRefreshToken, accessToken: newAccessToken } = response;
+            if (!response.ok) {
+                console.log('Please logout and login again.');
+                return;
+            }
+
+            const { refreshToken: newRefreshToken, accessToken: newAccessToken } = response.body;
+
             const refreshTokenDecoded = jwtdecode(newAccessToken);
             localStorage.setItem('access-token', newAccessToken);
             localStorage.setItem('refresh-token', newRefreshToken);
-            localStorage.setItem('access-token-expire-at', refreshTokenDecoded.exp);
+            localStorage.setItem('access-token-expire-at', refreshTokenDecoded.exp * 1000); // exp: number of seconds.
         }
 
         const accessToken = localStorage.getItem('access-token');
