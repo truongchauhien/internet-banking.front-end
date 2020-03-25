@@ -31,7 +31,7 @@ const buildUrl = (useHttps, host, port, path, params) => {
 /**
  * 
  * @param {object} options
- * @param {'GET'|'POST'|'PUT'|'PATCH'|'HEAD'} options.method
+ * @param {'HEAD'|'GET'|'POST'|'PUT'|'PATCH'|'DELETE'} options.method
  * @param {string} options.resource
  * @param {object} options.params
  * @param {object} options.body
