@@ -37,8 +37,8 @@ module.exports = {
         envConfigPlugin
     ],
     output: {
-        path: __dirname + '/public',
-        publicPath: '/assets/',
+        path: __dirname + '/public/assets/scripts',
+        publicPath: '/assets/scripts',
         filename: 'bundle.js'
     }
 };
