@@ -12,8 +12,21 @@ module.exports = {
                 use: ['babel-loader']
             },
             {
-                test: /\.s[ac]ss$/i,
-                use: ['style-loader', 'css-loader', 'sass-loader'],
+                test: /\.scss$/i,
+                use: [
+                    'style-loader',
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            modules: {
+                                mode: 'local',
+                                localIdentName: '[path]__[name]__[local]'
+                            },
+                            localsConvention: 'camelCase'
+                        }
+                    },
+                    'sass-loader'
+                ],
             }
         ]
     },
