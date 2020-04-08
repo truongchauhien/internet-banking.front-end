@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Accordion from '../../commons/components/accordion/accordion';
+import Accordion from '../../../../commons/components/accordion/accordion';
 import { thunkedFetchAccounts } from '../../commons/thunks/accounts-thunks';
 import styles from './accounts.scss';
 

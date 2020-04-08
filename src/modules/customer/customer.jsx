@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { NavLink, useRouteMatch, Link, Route, Switch, useLocation, matchPath } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import { SideBar, MenuItem } from './commons/components/sidebar/sidebar';
+import { SideBar, MenuItem } from '../../commons/components/sidebar/sidebar';
 import Accounts from './modules/accounts/accounts';
 import Contacts from './modules/contacts/contacts';
 import Transfer from './modules/transfer/transfer';

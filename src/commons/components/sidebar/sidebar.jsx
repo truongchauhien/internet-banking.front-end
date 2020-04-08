@@ -2,7 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import styles from './sidebar.scss';
 
-const SideBar = (props) => {
+export const SideBar = (props) => {
     return (
         <div>
             {props.children}
@@ -45,5 +45,4 @@ SideBar.Menu.Item = ({ active, children, ...restProps }) => {
     }
 };
 
-export { SideBar };
 export default SideBar;
