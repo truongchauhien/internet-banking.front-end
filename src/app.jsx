@@ -1,38 +1,52 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Switch, Route, Redirect, useLocation } from 'react-router-dom';
-import Login from './modules/login/login';
-import PrivateRoute from './commons/permissions/private-route';
 import { useSelector } from 'react-redux';
+import Login from './modules/login/login';
+import PrivateRoute from './commons/components/permissions/private-route';
+import Customer from './modules/customer/customer';
+import './app.scss';
 
-function App(props) {
+const App = (props) => {
     const userType = useSelector(state => state.login.userType);
+    const switchModule = useCallback(() => {
+        switch (userType) {
+            case 'customer':
+                return <Redirect to='/customer' />;
+            case 'employee':
+                return <Redirect to='/employee' />;
+            case 'administrator':
+                return <Redirect to='/administrator' />;
+            default:
+                return <Redirect to='/customer' />;
+        }
+    });
 
     return (
         <BrowserRouter>
-            {/* */}
-            <Route exact path='/'
-                render={() => {
-                    switch (userType) {
-                        case 'customer':
-                            return <Redirect to='/customer' />;
-                        case 'employee':
-                            return <Redirect to='/employee' />;
-                        case 'administrator':
-                            return <Redirect to='/administrator' />;
-                        default:
-                            return <Redirect to='/customer' />;
-                    }
-                }}
-            />
+            <Switch>
+                <Route exact path='/'>
+                    {switchModule()}
+                </Route>
 
-            <Route path='/login' component={Login} />
+                <Route path='/login'>
+                    <Login />
+                </Route>
 
-            <PrivateRoute path='/customer' component={<div>Customer</div>} />
-            <PrivateRoute path='/employee' component={<div>Employee</div>} />
-            <PrivateRoute path='/administrator' component={<div>Administrator</div>} />
+                <PrivateRoute path='/customer'>
+                    <Customer />
+                </PrivateRoute>
+
+                <PrivateRoute path='/employee'>
+                    <div>Employee</div>
+                </PrivateRoute>
+
+                <PrivateRoute path='/administrator'>
+                    <div>Administrator</div>
+                </PrivateRoute>
+            </Switch>
         </BrowserRouter>
-    )
-}
+    );
+};
 
 export default App;
