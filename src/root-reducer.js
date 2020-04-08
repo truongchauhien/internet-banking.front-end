@@ -4,7 +4,7 @@ import customerReducer from "./modules/customer/customer-reducer";
 
 const rootReducer = combineReducers({
     login: loginReducer,
-    // customer: customerReducer
+    customer: customerReducer
 });
 
 export default rootReducer;
