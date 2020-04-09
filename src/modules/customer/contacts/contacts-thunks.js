@@ -62,16 +62,16 @@ export const thunkedPatchContact = ({ contactId, payload }) => {
 
 export const thunkedCreateContact = ({ ...payload }) => {
     return async (dispatch, getState) => {
-        const temporaryIdentity = uuidv4();
-        dispatch(createContactRequest({ postedContact: payload, id: temporaryIdentity }));
+        const tempId = uuidv4();
+        dispatch(createContactRequest({ postedContact: payload, tempId: tempId }));
         try {
             const response = await createContact({ ...payload });
-            if (!response.ok) return dispatch(createContactFailure({ id: temporaryIdentity }));
+            if (!response.ok) return dispatch(createContactFailure({ tempId: tempId }));
 
             const createdContact = response.body;
-            return dispatch(createContactSuccess({ createdContact, id: temporaryIdentity }));
+            return dispatch(createContactSuccess({ createdContact, tempId: tempId }));
         } catch {
-            return dispatch(patchContactFailure({ id: temporaryIdentity }));
+            return dispatch(patchContactFailure({ tempId: tempId }));
         }
     };
 };

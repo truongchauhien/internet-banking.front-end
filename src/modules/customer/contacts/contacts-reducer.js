@@ -1,4 +1,4 @@
-'use strict'
+import _ from 'lodash';
 import {
     FECTH_CONTACTS_REQUEST,
     FECTH_CONTACTS_FAILURE,
@@ -13,102 +13,110 @@ import {
     CREATE_CONTACT_FAILURE,
     CREATE_CONTACT_SUCCESS
 } from './contacts-actions';
+import { convertArrayToObject } from '../../../commons/utils/array-utils';
+import { combineReducers } from 'redux';
 
-const initState = [];
-
-const handleFetchContactsRequest = (state, action) => {
-    return [];
+const initState = {
+    byId: {},
+    allIds: []
 };
 
-const handleFetchContactsFailure = (state, action) => {
-    return [];
-};
-
-const handleFetchContactsSuccess = (state, action) => {
-    return [...action.payload];
-};
-
-const handlePatchContactRequest = (state, action) => {
-    return state;
-};
-
-const handlePatchContactFailure = (state, action) => {
-    return state;
-};
-
-const handlePatchContactSuccess = (state, action) => {
-    return state;
-};
-
-const handleDeleteContactRequest = (state, action) => {
-    return state;
-};
-
-const handleDeleteContactFailure = (state, action) => {
-    return state;
-};
-
-const handleDeleteContactSuccess = (state, action) => {
-    const deletedId = action.payload.id;
-    return state.filter((contact, index) => contact.id !== deletedId);
-};
-
-const handleCreateContactRequest = (state, action) => {
-    const postedContact = { ...action.payload.postedContact, id: action.payload.id };
-    return [...state, postedContact];
-};
-
-const handleCreateContactFailure = (state, action) => {
-    const temporaryIdentity = action.payload.id;
-    const filteredState = state.filter(
-        (contact, index) => contact.id !== temporaryIdentity
-    );
-    return [...filteredState];
-};
-
-const handleCreateContactSuccess = (state, action) => {
-    const temporaryIdentity = action.payload.id;
-    const createdContact = action.payload.createdContact;
-    const changedState = state.map((contact, index) => {
-        if (contact.id !== temporaryIdentity) {
-            return contact;
-        }
-
-        return createdContact;
-    });
-
-    return changedState;
-};
-
-export const contactsReducer = (state = initState, action) => {
+const byIdReducer = (state = initState.byId, action) => {
     switch (action.type) {
-        case FECTH_CONTACTS_REQUEST:
-            return handleFetchContactsRequest(state, action);
-        case FECTH_CONTACTS_FAILURE:
-            return handleFetchContactsFailure(state, action);
         case FECTH_CONTACTS_SUCCESS:
-            return handleFetchContactsSuccess(state, action);
-        case PATCH_CONTACT_REQUEST:
-            return handlePatchContactRequest(state, action);
-        case PATCH_CONTACT_FAILURE:
-            return handlePatchContactFailure(state, action);
-        case PATCH_CONTACT_SUCCESS:
-            return handlePatchContactSuccess(state, action);
-        case DELETE_CONTACT_REQUEST:
-            return handleDeleteContactRequest(state, action);
-        case DELETE_CONTACT_FAILURE:
-            return handleDeleteContactFailure(state, action);
-        case DELETE_CONTACT_SUCCESS:
-            return handleDeleteContactSuccess(state, action);
+            return $byId$handleFetchContactsSuccess(state, action);
         case CREATE_CONTACT_REQUEST:
-            return handleCreateContactRequest(state, action);
+            return $byId$handleCreateContactRequest(state, action);
         case CREATE_CONTACT_FAILURE:
-            return handleCreateContactFailure(state, action);
+            return $byId$handleCreateContactFailure(state, action);
         case CREATE_CONTACT_SUCCESS:
-            return handleCreateContactSuccess(state, action);
+            return $byId$handleCreateContactSuccess(state, action);
+        case DELETE_CONTACT_SUCCESS:
+            return $byId$handleDeleteContactSuccess(state, action);
         default:
             return state;
     }
 };
+
+const allIdsReducer = (state = initState.allIds, action) => {
+    switch (action.type) {
+        case FECTH_CONTACTS_SUCCESS:
+            return $allIds$handleFetchContactsSuccess(state, action);
+        case CREATE_CONTACT_REQUEST:
+            return $allIds$handleCreateContactRequest(state, action);
+        case CREATE_CONTACT_FAILURE:
+            return $allIds$handleCreateContactFailure(state, action);
+        case CREATE_CONTACT_SUCCESS:
+            return $allIds$handleCreateContactSuccess(state, action);
+        case DELETE_CONTACT_SUCCESS:
+            return $allIds$handleDeleteContactSuccess(state, action);
+        default:
+            return state;
+    }
+};
+
+function $byId$handleFetchContactsSuccess(state, action) {
+    return convertArrayToObject(action.payload, 'id');
+}
+
+function $allIds$handleFetchContactsSuccess(state, action) {
+    return action.payload.map(item => item.id);
+}
+
+function $byId$handleCreateContactRequest(state, action) {
+    const postedContact = {
+        id: action.payload.tempId,
+        ...action.payload.postedContact
+    };
+
+    return { ...state, [postedContact.id]: postedContact };
+}
+
+function $allIds$handleCreateContactRequest(state, action) {
+    return [...state, action.payload.tempId];
+}
+
+function $byId$handleCreateContactFailure(state, action) {
+    return _.omit(state, action.payload.tempId);
+}
+
+function $allIds$handleCreateContactFailure(state, action) {
+    return state.filter(id => id !== action.payload.tempId);
+}
+
+function $byId$handleCreateContactSuccess(state, action) {
+    return Object.fromEntries(
+        Object.entries(state).map(([id, item]) => {
+            if (id !== action.payload.tempId) {
+                return [id, item];
+            }
+
+            return [
+                action.payload.createdContact.id,
+                action.payload.createdContact
+            ];
+        })
+    );
+}
+
+function $allIds$handleCreateContactSuccess(state, action) {
+    return state.map(id =>
+        id !== action.payload.tempId ?
+            id : action.payload.createdContact.id
+    );
+}
+
+function $byId$handleDeleteContactSuccess(state, action) {
+    return _.omit(state, action.payload.id);
+}
+
+function $allIds$handleDeleteContactSuccess(state, action) {
+    return state.filter(item => item !== action.payload.id);
+}
+
+export const contactsReducer = combineReducers({
+    byId: byIdReducer,
+    allIds: allIdsReducer
+});
 
 export default contactsReducer;

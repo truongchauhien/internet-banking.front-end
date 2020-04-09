@@ -51,7 +51,8 @@ const reducer = (state, action) => {
 
 export const Contacts = (props) => {
     const reduxDispatch = useDispatch();
-    const contacts = useSelector(state => state.customer.contacts);
+    const contacts = useSelector(state => state.customer.contacts.byId);
+    const contactIds = useSelector(state => state.customer.contacts.allIds)
 
     const [state, localDispatch] = useReducer(reducer, initState);
 
@@ -116,7 +117,8 @@ export const Contacts = (props) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {contacts && contacts.map((contact, index) => {
+                    {contactIds && contactIds.map((id, index) => {
+                        const contact = contacts[id];
                         return (
                             <tr key={contact.id}>
                                 <td>
