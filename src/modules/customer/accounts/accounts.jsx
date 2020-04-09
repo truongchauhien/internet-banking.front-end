@@ -9,7 +9,8 @@ export const Accounts = () => {
 
     const dispatch = useDispatch();
 
-    const accounts = useSelector(state => state.customer.accounts);
+    const accountAllIds = useSelector(state => state.customer.accounts.allIds);
+    const accountById = useSelector(state => state.customer.accounts.byId);
 
     useEffect(() => {
         dispatch(thunkedFetchAccounts());
@@ -22,7 +23,9 @@ export const Accounts = () => {
     return (
         <div>
             <Accordion>
-                {accounts && accounts.map((account, index) => {
+                {accountAllIds && accountAllIds.map((accountId, index) => {
+                    const account = accountById[accountId];
+                    
                     if (account.accountType === 'CURRENT') {
                         return (
                             <React.Fragment key={account.accountNumber}>
