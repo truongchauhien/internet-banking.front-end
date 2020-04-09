@@ -5,7 +5,7 @@
             {
                 "modules": false,
                 "targets": {
-                    "firefox": "74"
+                    "firefox": "75"
                 }
             }
         ],
