@@ -13,13 +13,13 @@ import {
     createContactRequest,
     createContactFailure,
     createContactSuccess
-} from '../actions/contacts-actions';
+} from './contacts-actions';
 import {
     fetchContacts,
     deleteContact,
     patchContact,
     createContact
-} from '../../../../commons/apis/customers/contacts-api';
+} from '../../../commons/apis/customers/contacts-api';
 
 export const thunkedFetchContacts = () => {
     return async (dispatch, getState) => {

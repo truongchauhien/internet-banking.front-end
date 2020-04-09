@@ -12,7 +12,7 @@ import {
     CREATE_CONTACT_REQUEST,
     CREATE_CONTACT_FAILURE,
     CREATE_CONTACT_SUCCESS
-} from '../actions/contacts-actions';
+} from './contacts-actions';
 
 const initState = [];
 

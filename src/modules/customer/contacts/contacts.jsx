@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useReducer } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
-import { thunkedFetchContacts, thunkedDeleteContact, thunkedPatchContact, thunkedCreateContact } from '../../commons/thunks/contacts-thunks';
+import { thunkedFetchContacts, thunkedDeleteContact, thunkedPatchContact, thunkedCreateContact } from './contacts-thunks';
 import styles from './contacts.scss';
 
 const initState = {

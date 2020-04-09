@@ -2,8 +2,8 @@ import {
     fetchAccountsRequest,
     fetchAccountsSuccess,
     fetchAccountsFailure
-} from '../actions/account-actions';
-import { fetchAccounts } from '../../../../commons/apis/customers/accounts-api';
+} from './account-actions';
+import { fetchAccounts } from '../../../commons/apis/customers/accounts-api';
 
 export const thunkedFetchAccounts = () => {
     return async (dispatch, getState) => {

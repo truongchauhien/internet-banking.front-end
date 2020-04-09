@@ -2,7 +2,7 @@ import {
     FECTH_ACCOUNTS_REQUEST,
     FETCH_ACCOUNTS_SUCCESS,
     FETCH_ACCOUNTS_FAILURE
-} from '../actions/account-actions';
+} from './account-actions';
 
 const initState = [];
 

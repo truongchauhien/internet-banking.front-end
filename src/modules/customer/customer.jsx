@@ -2,9 +2,9 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { NavLink, useRouteMatch, Link, Route, Switch, useLocation, matchPath } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { SideBar, MenuItem } from '../../commons/components/sidebar/sidebar';
-import Accounts from './modules/accounts/accounts';
-import Contacts from './modules/contacts/contacts';
-import Transfer from './modules/transfer/transfer';
+import Accounts from './accounts/accounts';
+import Contacts from './contacts/contacts';
+import Transfer from './transfer/transfer';
 import styles from './customer.scss';
 
 const _matchPath = (path1, path2) => {
