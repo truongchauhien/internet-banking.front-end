@@ -1,13 +1,25 @@
 import React from 'react';
 import styles from './select.scss';
 
-export const Select = ({ options = [], defaultValue, value, onChange, children, ...props }) => {
+export const Select = ({
+    id,
+    options = [],
+    defaultValue,
+    value,
+    placeHolder,
+    onChange,
+    children,
+    ...props
+}) => {
     const handleOnChange = (args) => {
         onChange && onChange(args.target.value);
     };
 
     return (
-        <select onChange={handleOnChange} defaultValue={defaultValue} value={value}>
+        <select id={id} onChange={handleOnChange} defaultValue={defaultValue} value={value}>
+            {placeHolder &&
+                <option hidden>{placeHolder}</option>
+            }
             {
                 children ||
                 options && options.map(({ value, label }) => (
