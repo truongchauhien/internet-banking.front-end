@@ -107,8 +107,8 @@ export const Contacts = (props) => {
     };
 
     return (
-        <div>
-            <table className={styles.contactTable}>
+        <div className={styles.contactTable}>
+            <table>
                 <thead>
                     <tr>
                         <th>Tên liên hệ</th>
