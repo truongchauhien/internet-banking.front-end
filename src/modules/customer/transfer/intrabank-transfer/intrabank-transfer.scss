@@ -1,0 +1,28 @@
+.contact-table {
+    table {
+        table-layout: fixed;
+        width: 700px;
+        max-width: 100%;
+        border-collapse: collapse;
+
+        thead {
+            tr {
+                border-bottom: 3px solid purple;
+
+                th:not(:last-child) {
+                    text-align: left;
+                }
+            }
+        }
+
+        tbody {
+            tr {
+                border-bottom: 3px solid black;
+
+                td:nth-child(3) {
+                    text-align: center;
+                }
+            }
+        }
+    }    
+}
