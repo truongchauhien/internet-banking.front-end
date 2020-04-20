@@ -9,7 +9,7 @@ import request from "./commons/api-request";
 export const fetchLogin = (payload) => {
     return request({
         method: 'POST',
-        resource: '/auth/login',
+        resource: '/api/auth/login',
         useAccessToken: false,
         body: payload
     });
@@ -25,7 +25,7 @@ export const fetchLogin = (payload) => {
 export const fetchNewAccessToken = (payload) => {
     return request({
         method: 'POST',
-        resource: '/auth/token',
+        resource: '/api/auth/token',
         body: payload,
         useAccessToken: false
     });
