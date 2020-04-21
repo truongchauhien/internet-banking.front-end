@@ -3,7 +3,7 @@ import {
     fetchAccountsSuccess,
     fetchAccountsFailure
 } from './account-actions';
-import { fetchAccounts } from '../../../commons/apis/customers/accounts-api';
+import { fetchAccounts } from '../../../commons/apis/accounts-api';
 
 export const thunkedFetchAccounts = () => {
     return async (dispatch, getState) => {
