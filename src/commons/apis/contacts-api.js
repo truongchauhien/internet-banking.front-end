@@ -12,9 +12,9 @@ export const deleteContact = ({ id }) => request({
     useAccessToken: true
 });
 
-export const patchContact = ({contactId, ...payload}) => request({
+export const patchContact = ({id, ...payload}) => request({
     method: 'PATCH',
-    resource: `/api/contacts/${contactId}`,
+    resource: `/api/contacts/${id}`,
     body: payload,
     useAccessToken: true
 });
