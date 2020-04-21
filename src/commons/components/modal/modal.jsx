@@ -4,7 +4,7 @@ import styles from './modal.scss';
 
 const rootModal = document.getElementById('root-modal');
 
-export const Modal = ({ isOpen, onClickOutSide: onClickOutside, children }) => {
+export const Modal = ({ isOpen, onClickOutside, children }) => {
     const [modal] = useState(document.createElement('div'));
     const [modalOverlay] = useState(document.createElement('div'));
 
