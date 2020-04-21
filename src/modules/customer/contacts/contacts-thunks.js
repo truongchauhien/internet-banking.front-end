@@ -12,14 +12,15 @@ import {
     patchContactSuccess,
     createContactRequest,
     createContactFailure,
-    createContactSuccess
+    createContactSuccess,
+    contactCreationInit
 } from './contacts-actions';
 import {
     fetchContacts,
     deleteContact,
     patchContact,
     createContact
-} from '../../../commons/apis/customers/contacts-api';
+} from '../../../commons/apis/contacts-api';
 
 export const thunkedFetchContacts = () => {
     return async (dispatch, getState) => {
@@ -70,8 +71,8 @@ export const thunkedCreateContact = ({ ...payload }) => {
         try {
             const response = await createContact({ ...payload });
             if (!response.ok) return dispatch(createContactFailure({ tempId: tempId }));
-
             const createdContact = response.body;
+            dispatch(contactCreationInit());
             return dispatch(createContactSuccess({ createdContact, tempId: tempId }));
         } catch {
             return dispatch(patchContactFailure({ tempId: tempId }));
