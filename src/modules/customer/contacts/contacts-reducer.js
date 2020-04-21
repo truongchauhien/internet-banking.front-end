@@ -11,28 +11,71 @@ import {
     DELETE_CONTACT_SUCCESS,
     CREATE_CONTACT_REQUEST,
     CREATE_CONTACT_FAILURE,
-    CREATE_CONTACT_SUCCESS
+    CREATE_CONTACT_SUCCESS,
+    CONTACT_CREATION_INPUT_CHANGE,
+    CONTACT_CREATION_MODAL_OPEN_STATUS_CHANGE,
+    CONTACT_MODIFICATION_INPUT_CHANGE,
+    CONTACT_MODIFICATION_MODAL_OPEN_STATUS_CHANGE,
+    CONTACT_MODIFICATION_INIT,
+    CONTACT_CREATION_INIT
 } from './contacts-actions';
 import { convertArrayToObject } from '../../../commons/utils/array-utils';
 import { combineReducers } from 'redux';
 
 const initState = {
     byId: {},
-    allIds: []
+    allIds: [],
+    contactCreation: {
+        fields: {
+            name: '',
+            accountNumber: '',
+            bankId: ''
+        },
+        isModalOpen: false
+    },
+    contactModification: {
+        fields: {
+            id: null,
+            name: '',
+            accountNumber: '',
+            bankId: ''
+        },
+        isModalOpen: false
+    }
 };
 
 const byIdReducer = (state = initState.byId, action) => {
     switch (action.type) {
         case FECTH_CONTACTS_SUCCESS:
-            return $byId$handleFetchContactsSuccess(state, action);
+            return convertArrayToObject(action.payload, 'id');
         case CREATE_CONTACT_REQUEST:
-            return $byId$handleCreateContactRequest(state, action);
+            const postedContact = {
+                id: action.payload.tempId,
+                ...action.payload.postedContact
+            };
+
+            return { ...state, [postedContact.id]: postedContact };
         case CREATE_CONTACT_FAILURE:
-            return $byId$handleCreateContactFailure(state, action);
+            return _.omit(state, action.payload.tempId);
         case CREATE_CONTACT_SUCCESS:
-            return $byId$handleCreateContactSuccess(state, action);
+            return Object.fromEntries(
+                Object.entries(state).map(([id, item]) => {
+                    if (id !== action.payload.tempId) {
+                        return [id, item];
+                    }
+
+                    return [
+                        action.payload.createdContact.id,
+                        action.payload.createdContact
+                    ];
+                })
+            );
         case DELETE_CONTACT_SUCCESS:
-            return $byId$handleDeleteContactSuccess(state, action);
+            return _.omit(state, action.payload.id);
+        case PATCH_CONTACT_SUCCESS:
+            return _.merge({}, state, {
+                [action.payload.id]: action.payload
+            });
         default:
             return state;
     }
@@ -41,82 +84,94 @@ const byIdReducer = (state = initState.byId, action) => {
 const allIdsReducer = (state = initState.allIds, action) => {
     switch (action.type) {
         case FECTH_CONTACTS_SUCCESS:
-            return $allIds$handleFetchContactsSuccess(state, action);
+            return action.payload.map(item => item.id);
         case CREATE_CONTACT_REQUEST:
-            return $allIds$handleCreateContactRequest(state, action);
+            return [...state, action.payload.tempId];
         case CREATE_CONTACT_FAILURE:
-            return $allIds$handleCreateContactFailure(state, action);
+            return state.filter(id => id !== action.payload.tempId);
         case CREATE_CONTACT_SUCCESS:
-            return $allIds$handleCreateContactSuccess(state, action);
+            return state.map(id =>
+                id !== action.payload.tempId ?
+                    id : action.payload.createdContact.id
+            );
         case DELETE_CONTACT_SUCCESS:
-            return $allIds$handleDeleteContactSuccess(state, action);
+            return state.filter(item => item !== action.payload.id);
         default:
             return state;
     }
 };
 
-function $byId$handleFetchContactsSuccess(state, action) {
-    return convertArrayToObject(action.payload, 'id');
-}
-
-function $allIds$handleFetchContactsSuccess(state, action) {
-    return action.payload.map(item => item.id);
-}
-
-function $byId$handleCreateContactRequest(state, action) {
-    const postedContact = {
-        id: action.payload.tempId,
-        ...action.payload.postedContact
-    };
-
-    return { ...state, [postedContact.id]: postedContact };
-}
-
-function $allIds$handleCreateContactRequest(state, action) {
-    return [...state, action.payload.tempId];
-}
-
-function $byId$handleCreateContactFailure(state, action) {
-    return _.omit(state, action.payload.tempId);
-}
-
-function $allIds$handleCreateContactFailure(state, action) {
-    return state.filter(id => id !== action.payload.tempId);
-}
-
-function $byId$handleCreateContactSuccess(state, action) {
-    return Object.fromEntries(
-        Object.entries(state).map(([id, item]) => {
-            if (id !== action.payload.tempId) {
-                return [id, item];
+const contactCreationFields = ['name', 'accountNumber', 'bankId'];
+const contactCreationFieldsReducer = (state = initState.contactCreation.fields, action) => {
+    switch (action.type) {
+        case CONTACT_CREATION_INPUT_CHANGE:
+            if (!contactCreationFields.includes(action.payload.field)) {
+                return state;
             }
-
-            return [
-                action.payload.createdContact.id,
-                action.payload.createdContact
-            ];
-        })
-    );
+            return Object.assign({}, state, {
+                [action.payload.field]: action.payload.value
+            });
+        case CONTACT_CREATION_INIT:
+            return _.merge({}, state, {
+                name: '',
+                accountNumber: '',
+                bankId: ''
+            });
+        default:
+            return state;
+    }
 }
 
-function $allIds$handleCreateContactSuccess(state, action) {
-    return state.map(id =>
-        id !== action.payload.tempId ?
-            id : action.payload.createdContact.id
-    );
-}
+const contactCreationModalOpenStatusReducer = (state = initState.contactCreation.isModalOpen, action) => {
+    switch (action.type) {
+        case CONTACT_CREATION_MODAL_OPEN_STATUS_CHANGE:
+            return action.payload;
+        default:
+            return state;
+    }
+};
 
-function $byId$handleDeleteContactSuccess(state, action) {
-    return _.omit(state, action.payload.id);
-}
+const contactModificationFields = ['name', 'accountNumber', 'bankId'];
+const contactModificationFieldsReducer = (state = initState.contactModification.fields, action) => {
+    switch (action.type) {
+        case CONTACT_MODIFICATION_INIT:
+            return action.payload;
+        case CONTACT_MODIFICATION_INPUT_CHANGE:
+            if (!contactModificationFields.includes(action.payload.field)) {
+                return state;
+            }
+            return Object.assign({}, state, {
+                [action.payload.field]: action.payload.value
+            });
+        default:
+            return state;
+    }
+};
 
-function $allIds$handleDeleteContactSuccess(state, action) {
-    return state.filter(item => item !== action.payload.id);
-}
+const contactModificationModalOpenStatusReducer = (state = initState.contactModification.isModalOpen, action) => {
+    switch (action.type) {
+        case CONTACT_MODIFICATION_MODAL_OPEN_STATUS_CHANGE:
+            return action.payload;
+        default:
+            return state;
+    }
+};
+
+const contactCreationReducer = combineReducers({
+    fields: contactCreationFieldsReducer,
+    isModalOpen: contactCreationModalOpenStatusReducer
+});
+
+const contactModificationReducer = combineReducers({
+    fields: contactModificationFieldsReducer,
+    isModalOpen: contactModificationModalOpenStatusReducer
+});
 
 export const contactsReducer = combineReducers({
     byId: byIdReducer,
-    allIds: allIdsReducer
+    allIds: allIdsReducer,
+    contactCreation: contactCreationReducer,
+    contactModification: contactModificationReducer
 });
 
 export default contactsReducer;
