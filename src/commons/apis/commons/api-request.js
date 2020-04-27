@@ -1,9 +1,12 @@
 import jwtdecode from 'jwt-decode';
-import { fetchNewAccessToken } from '../auth-api';
+import { fetchNewAccessToken } from '../authentication-api';
 
 const convertToString = (value) => {
-    // TODO:
-    return String(value);
+    if (value instanceof Date) {
+        return value.toISOString();
+    }
+    
+    return value;
 };
 
 const buildQueryString = (params) => {
@@ -14,7 +17,7 @@ const buildQueryString = (params) => {
     const pairs = [];
     for (const key in params) {
         const value = params[key];
-        if (value !== undefined) {
+        if (value !== undefined && value !== null) {
             const encodedValue = encodeURIComponent(convertToString(value));
             pairs.push(`${key}=${encodedValue}`);
         }
@@ -44,9 +47,9 @@ const request = async (options) => {
     };
 
     if (useAccessToken) {
-        const expireAtValue = localStorage.getItem('access-token-expire-at');
+        const expireAtValue = localStorage.getItem('accessTokenExpireAt');
         if (!expireAtValue) {
-            localStorage.setItem('access-token-expire-at', Date.now());
+            localStorage.setItem('accessTokenExpireAt', Date.now());
         }
 
         const expireAt = new Date(Number.parseInt(expireAtValue));
@@ -54,9 +57,9 @@ const request = async (options) => {
         const differenceMinutes = differenceMiliseconds / 1000 / 60;
 
         if (differenceMinutes <= 0.5) {
-            const userId = localStorage.getItem('user-id');
-            const userType = localStorage.getItem('user-type');
-            const refreshToken = localStorage.getItem('refresh-token');
+            const userId = localStorage.getItem('userId');
+            const userType = localStorage.getItem('userType');
+            const refreshToken = localStorage.getItem('refreshToken');
             const response = await fetchNewAccessToken({
                 userId,
                 userType,
@@ -71,12 +74,12 @@ const request = async (options) => {
             const { refreshToken: newRefreshToken, accessToken: newAccessToken } = response.body;
 
             const refreshTokenDecoded = jwtdecode(newAccessToken);
-            localStorage.setItem('access-token', newAccessToken);
-            localStorage.setItem('refresh-token', newRefreshToken);
-            localStorage.setItem('access-token-expire-at', refreshTokenDecoded.exp * 1000); // exp: number of seconds.
+            localStorage.setItem('accessToken', newAccessToken);
+            localStorage.setItem('refreshToken', newRefreshToken);
+            localStorage.setItem('accessTokenExpireAt', refreshTokenDecoded.exp * 1000); // exp: number of seconds.
         }
 
-        const accessToken = localStorage.getItem('access-token');
+        const accessToken = localStorage.getItem('accessToken');
         headers['Authentication'] = `Bearer ${accessToken}`;
     }
 
