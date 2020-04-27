@@ -26,7 +26,7 @@ export const createIntrabankTransfer = (payload) => request({
  * @param {string} payload.otp
  */
 export const confirmIntrabankTransfer = ({ transferId, ...payload }) => request({
-    method: 'PATCH',
+    method: 'POST',
     resource: `/api/transfers/${transferId}`,
     body: payload,
     params: {
@@ -61,7 +61,7 @@ export const createInterbankTransfer = (payload) => request({
  * @param {string} payload.otp
  */
 export const confirmInterbankTransfer = ({ transferId, ...payload }) => request({
-    method: 'PATCH',
+    method: 'POST',
     resource: `/api/transfers/${transferId}`,
     body: payload,
     params: {
@@ -70,6 +70,11 @@ export const confirmInterbankTransfer = ({ transferId, ...payload }) => request(
     useAccessToken: true
 });
 
+/**
+ * 
+ * @param {object} payload
+ * @param {object} payload.debtId
+ */
 export const createPayDebtTransfer = (payload) => request({
     method: 'POST',
     resource: '/api/transfers',
@@ -87,7 +92,7 @@ export const createPayDebtTransfer = (payload) => request({
  * @param {string} payload.otp
  */
 export const confirmPayDebtTransfer = ({ transferId, ...payload }) => request({
-    method: 'PATCH',
+    method: 'POST',
     resource: `/api/transfers/${transferId}`,
     body: payload,
     params: {
