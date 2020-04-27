@@ -1,10 +1,10 @@
 import {
     createIntrabankTransferRequest, createIntrabankTransferFailure, createIntrabankTransferSuccess,
     confirmIntrabankTransferRequest, confirmIntrabankTransferFailure, confirmIntrabankTransferSuccess
-} from './intrabank-transfer-actions';
+} from './actions';
 import {
     createIntrabankTransfer, confirmIntrabankTransfer
-} from '../../../../commons/apis/customers/transfer-api';
+} from '../../../../commons/apis/transfer-api';
 
 /**
  * 

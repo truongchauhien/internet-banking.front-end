@@ -7,7 +7,7 @@ import {
     CONFIRM_INTRABANK_TRANSFER_FAILURE,
     CONFIRM_INTRABANK_TRANSFER_SUCCESS,
     CLEAR_INTRABANK_TRANSFER,
-} from './intrabank-transfer-actions';
+} from './actions';
 
 const initState = {
     stage: 'input-information',

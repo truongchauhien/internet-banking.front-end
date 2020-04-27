@@ -1,14 +1,17 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import Modal from '../../../../commons/components/modal/modal';
 import Message from '../../../../commons/components/message/message';
 import Loader from '../../../../commons/components/loader/loader';
-import AccountSelector from '../commons/AccountSelector';
-import { thunkedCreateIntrabankTransfer, thunkedConfirmIntrabankTransfer } from './intrabank-transfer-thunks';
-import { clearIntrabankTransfer } from './intrabank-transfer-actions';
-import styles from './intrabank-transfer.scss';
+import AccountSelector from '../commons/account-selector/account-selector';
+import { thunkedCreateIntrabankTransfer, thunkedConfirmIntrabankTransfer } from './thunks';
+import { clearIntrabankTransfer } from './actions';
+import styles from './intrabank.scss';
+import { showModal } from '../../commons/modals/actions';
+import ContactSelectionModal from '../../commons/contact-selection-modal/contact-selection-modal';
 
-const IntraBankTransfer = (props) => {
+const IntraBank = (props) => {
+    const dispatch = useDispatch();
+
     const { byId: accounts, allIds: accountIds } = useSelector(state => state.customer.accounts);
     const accountArray = useMemo(() => accountIds.map(id => accounts[id]), [accountIds]);
 
@@ -16,34 +19,31 @@ const IntraBankTransfer = (props) => {
     const contactArray = useMemo(() => contactIds.map(id => contacts[id]), [contactIds]);
 
     const [selectedAccountId, setSelectedAccountId] = useState();
-    const [selectedContactId, setSelectedContactId] = useState();
-    const [isContactModalOpen, setIsContactModalOpen] = useState(false);
     const [beneficiaryAccountNumber, setBeneficiaryAccountNumber] = useState('');
+    const [isContactSelectionModalOpen, setIsContactSelectionModalOpen] = useState(false);
     const [amount, setAmount] = useState(0);
     const [message, setMessage] = useState('');
     const [whoPayFee, setWhoPayFee] = useState('sender');
     const [otp, setOtp] = useState('');
 
-    const stage = useSelector(state => state.customer.transfer.intrabankTransfer.stage);
-    const transfer = useSelector(state => state.customer.transfer.intrabankTransfer.createdTransfer);
-
-    const reduxDispatch = useDispatch();
+    const stage = useSelector(state => state.customer.transfers.intrabank.stage);
+    const transfer = useSelector(state => state.customer.transfers.intrabank.createdTransfer);
 
     const handleOnAccountSelect = (accountId) => {
         setSelectedAccountId(accountId);
     };
 
     const handleFindContactButtonClick = () => {
-        setIsContactModalOpen(true);
+        setIsContactSelectionModalOpen(true);
     };
 
-    const handleContactModalClickOutSide = () => {
-        setIsContactModalOpen(false);
+    const handleContactSelectionModalClickOutside = () => {
+        setIsContactSelectionModalOpen(false);
     };
 
-    const handleSelectContactClick = (contactId) => {
-        setBeneficiaryAccountNumber(contacts[contactId].accountNumber);
-        setIsContactModalOpen(false);
+    const handleContactSelectionModalSelectContact = (selectContactId) => {
+        setBeneficiaryAccountNumber(contacts[selectContactId].accountNumber);
+        setIsContactSelectionModalOpen(false);
     };
 
     const handleBeneficiaryAccountNumberChange = (event) => {
@@ -52,10 +52,6 @@ const IntraBankTransfer = (props) => {
 
     const handleAmountInputChange = (event) => {
         setAmount(event.target.value);
-    };
-
-    const handleAmountInputKeyPress = (event) => {
-
     };
 
     const handleMessageInputChange = (event) => {
@@ -67,7 +63,7 @@ const IntraBankTransfer = (props) => {
     };
 
     const handleCreateTransferButtonClick = () => {
-        reduxDispatch(thunkedCreateIntrabankTransfer({
+        dispatch(thunkedCreateIntrabankTransfer({
             fromAccountNumber: accounts[selectedAccountId].accountNumber,
             toAccountNumber: beneficiaryAccountNumber,
             amount: amount,
@@ -77,7 +73,7 @@ const IntraBankTransfer = (props) => {
     };
 
     const handleCleanUpClick = () => {
-        reduxDispatch(clearIntrabankTransfer());
+        dispatch(clearIntrabankTransfer());
     };
 
     const handleOtpInputChange = (event) => {
@@ -85,10 +81,14 @@ const IntraBankTransfer = (props) => {
     };
 
     const handleConfirmTransferClick = () => {
-        reduxDispatch(thunkedConfirmIntrabankTransfer({
+        dispatch(thunkedConfirmIntrabankTransfer({
             otp: Number.parseInt(otp),
             transferId: transfer.id
         }));
+    };
+
+    const handleResetTransferUIButtonClick = () => {
+        dispatch(clearIntrabankTransfer());
     };
 
     return (
@@ -100,7 +100,7 @@ const IntraBankTransfer = (props) => {
                         <div>
                             <AccountSelector
                                 accounts={accountArray}
-                                defaultAccountId={selectedAccountId}
+                                selectedAccountId={selectedAccountId}
                                 onAccountSelect={handleOnAccountSelect}
                                 showedTypes={['CURRENT']}
                             />
@@ -117,32 +117,12 @@ const IntraBankTransfer = (props) => {
                         <label>Số tài khoản nhận: </label>
                         <input type="text" onChange={handleBeneficiaryAccountNumberChange} value={beneficiaryAccountNumber} />
                         <button onClick={handleFindContactButtonClick}>Tìm trong danh bạ ...</button>
-                        <Modal isOpen={isContactModalOpen} onClickOutSide={handleContactModalClickOutSide}>
-                            <Modal.Content>
-                                <div className={styles.contactTable}>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>Tên gợi nhớ</th>
-                                                <th>Số tài khoản</th>
-                                                <th>Chọn</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {contactArray && contactArray.map(contact => (
-                                                <tr key={contact.id}>
-                                                    <td>{contact.name}</td>
-                                                    <td>{contact.accountNumber}</td>
-                                                    <td>
-                                                        <button onClick={() => handleSelectContactClick(contact.id)}>Chọn</button>
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </Modal.Content>
-                        </Modal>
+                        <ContactSelectionModal
+                            isOpen={isContactSelectionModalOpen}
+                            onClickOutside={handleContactSelectionModalClickOutside}
+                            onContactSelect={handleContactSelectionModalSelectContact}
+                            internalContactOnly={true}
+                        />
                     </fieldset>
                     <fieldset>
                         <legend>Số tiền chuyển</legend>
@@ -212,11 +192,11 @@ const IntraBankTransfer = (props) => {
                 stage === 'transfer-confirmed' &&
                 <div>
                     <p>Chuyển khoản thành công!</p>
-                    <button>Tiếp tục</button>
+                    <button onClick={handleResetTransferUIButtonClick}>Tiếp tục</button>
                 </div>
             }
         </div>
     );
 };
 
-export default IntraBankTransfer;
+export default IntraBank;
