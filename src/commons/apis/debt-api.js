@@ -4,10 +4,8 @@ import request from "./commons/api-request";
  * 
  * @param {object} payload
  * @param {'sent'|'received'|'both'} payload.type
- * @param {Date} payload.fromTime
- * @param {Date} payload.toTime
- * @param {boolean} payload.newOnly,
- * @param {number} payload.pageNumber
+ * @param {number} payload.startingAfter
+ * @param {boolean} payload.newOnly
  */
 export const getDebts = (payload) => request({
     method: 'GET',
@@ -16,6 +14,28 @@ export const getDebts = (payload) => request({
     useAccessToken: true
 });
 
+/**
+ * 
+ * @param {object} payload
+ * @param {'id'|'transferId'} payload.identityType
+ * @param {string|number} payload.identityValue
+ */
+export const getDebt = (payload) => request({
+    method: 'GET',
+    resource: `/api/debts/${payload.identityValue}`,
+    params: {
+        identityType: payload.identityType
+    },
+    useAccessToken: true
+});
+
+/**
+ * 
+ * @param {object} payload
+ * @param {string} payload.toCustomerHasAccountNumber
+ * @param {number} payload.amount
+ * @param {string} payload.message
+ */
 export const createDebt = (payload) => request({
     method: 'POST',
     resource: '/api/debts',
@@ -23,9 +43,15 @@ export const createDebt = (payload) => request({
     useAccessToken: true
 });
 
-export const cancelDebt = ({ debtId, ...payload }) => request({
+/**
+ * 
+ * @param {object} payload
+ * @param {number} payload.id
+ * @param {string} payload.canceledReason
+ */
+export const cancelDebt = ({ id, ...payload }) => request({
     method: 'DELETE',
-    resource: `/api/debts/${debtId}`,
+    resource: `/api/debts/${id}`,
     body: payload,
     useAccessToken: true
 });
