@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { NavLink, useRouteMatch, useHistory } from 'react-router-dom';
+import { useRouteMatch, useHistory, Link } from 'react-router-dom';
 import Dropdown from '../../../commons/components/dropdown/dropdown';
 import { thunkedLogout } from '../../authentication/thunks';
 import styles from './top-navigation.scss';
@@ -22,6 +22,7 @@ export const TopNavigation = (props) => {
 
     return (
         <div className={styles.topnav}>
+            <Link to='/'>Internet Banking</Link>
             <Dropdown className={styles.userDropdown} label={fullName}>
                 <Dropdown.Item onClick={handleDropdownProfileClick}>Tài khoản</Dropdown.Item>
                 <Dropdown.Item onClick={handleDropdownLogoutClick}>Đăng xuất</Dropdown.Item>
@@ -29,3 +30,5 @@ export const TopNavigation = (props) => {
         </div>
     );
 };
+
+export default TopNavigation;
