@@ -30,10 +30,10 @@ export const ContactModificationModal = ({ onSubmit }) => {
         }));
     };
 
-    const handleLinkedBankSelectChange = (event) => {
+    const handleLinkedBankSelectChange = (selectedBankId) => {
         dispatch(contactModificationInputChange({
             field: 'bankId',
-            value: event.target.value
+            value: selectedBankId
         }));
     };
 
