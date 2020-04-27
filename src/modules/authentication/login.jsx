@@ -1,20 +1,20 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Form, Button } from 'semantic-ui-react';
 import { Redirect } from 'react-router-dom';
 import ReCaptcha from 'react-google-recaptcha';
-import { thunkedLogin } from './login-thunk';
+import { thunkedLogin } from './thunks';
+import styles from './login.scss';
 
 function Login(props) {
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [captchaToken, setCaptchaToken] = useState('');
 
-    const isAuthenticated = useSelector(state => state.login.isAuthenticated);
+    const isAuthenticated = useSelector(state => state.authentication.isAuthenticated);
 
     const dispatch = useDispatch();
 
-    const submit = useCallback(() => {
+    const submit = () => {
         if (!captchaToken) {
             alert('Vui lòng thực hiện bước xác thực bằng Google ReCAPTCHA.');
             return;
@@ -34,7 +34,7 @@ function Login(props) {
             password,
             captchaToken
         }));
-    });
+    };
 
     const changeUserName = useCallback((args) => {
         setUserName(args.target.value);
@@ -48,25 +48,20 @@ function Login(props) {
         setCaptchaToken(token);
     });
 
-    return (
-        isAuthenticated ?
-            <Redirect to='/' />
-            :
-            <Form>
-                <Form.Field>
-                    <label>Tên đăng nhập</label>
-                    <input placeholder='Tên đăng nhập ...' onChange={changeUserName} />
-                </Form.Field>
-                <Form.Field>
-                    <label>Mật khẩu</label>
-                    <input type='password' placeholder='Mật khẩu ...' onChange={changePassword} />
-                </Form.Field>
-                <Form.Field>
+    if (isAuthenticated) {
+        return <Redirect to='/' />;
+    } else {
+        return (
+            <div className={styles.loginForm}>
+                <label>Tên đăng nhập: <input placeholder='Tên đăng nhập ...' onChange={changeUserName} /></label>
+                <label>Mật khẩu: <input type='password' placeholder='Mật khẩu ...' onChange={changePassword} /></label>
+                <div className={styles.captcha}>
                     <ReCaptcha sitekey={RECAPTCHA_SITE_KEY} onChange={changeCaptchaToken} />
-                </Form.Field>
-                <Button type='submit' onClick={submit}>Đăng nhập</Button>
-            </Form>
-    );
+                </div>
+                <button type='submit' onClick={submit}>Đăng nhập</button>
+            </div>
+        );
+    }
 }
 
 export default Login;

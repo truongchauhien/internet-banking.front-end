@@ -1,0 +1,9 @@
+.loginForm {
+    & input {
+        display: block;
+    }
+
+    & .captcha {
+        margin-top: 2px;
+    }
+}
