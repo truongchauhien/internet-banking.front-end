@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
-import Select from '../../../../commons/components/select/select';
+import Select from '../../../../../commons/components/select/select';
 
-export const AccountSelector = ({ id, accounts, defaultAccountId, onAccountSelect, showedTypes }) => {
-    const [accountId, setAccountId] = useState(defaultAccountId ?? '');
-
+export const AccountSelector = ({ id, accounts, selectedAccountId = '', onAccountSelect, showedTypes }) => {
     const handleOnChange = (selectedValue) => {
-        setAccountId(selectedValue);
         onAccountSelect && onAccountSelect(selectedValue);
     };
 
     return (
-        <Select id={id} onChange={handleOnChange} value={accountId} placeHolder="Chọn tài khoản ...">
+        <Select id={id} onChange={handleOnChange} value={selectedAccountId} placeHolder="Chọn tài khoản ...">
             {
                 showedTypes && showedTypes.includes('CURRENT') &&
                 <Select.Group
