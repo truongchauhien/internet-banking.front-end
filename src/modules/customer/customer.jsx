@@ -4,10 +4,12 @@ import { Helmet } from 'react-helmet';
 import { SideBar, MenuItem } from '../../commons/components/sidebar/sidebar';
 import Accounts from './accounts/accounts';
 import Contacts from './contacts/contacts';
-import Transfer from './transfer/transfer';
+import Transfers from './transfers/transfers';
+import Debts from './debts/debts';
 import styles from './customer.scss';
+import { TopNavigation } from './top-navigation/top-navigation';
 
-const _matchPath = (path1, path2) => {
+const checkMatch = (path1, path2) => {
     return matchPath(path1, {
         path: path2,
         exact: false,
@@ -15,23 +17,75 @@ const _matchPath = (path1, path2) => {
     }) !== null;
 }
 
-function MainLayout(props) {
+function initActiveLink(pathname, path) {
+    if (checkMatch(pathname, path + '/accounts')) {
+        return 'accounts';
+    } else if (checkMatch(pathname, path + '/contacts')) {
+        return 'contacts';
+    } else if (checkMatch(pathname, path + '/transfers')) {
+        return 'transfers';
+    } else if (checkMatch(pathname, path + '/debts')) {
+        return 'debts';
+    } else {
+        return ''
+    }
+};
+
+function CustomerSideBar(props) {
     const { url, path } = useRouteMatch();
     const { pathname } = useLocation();
 
-    let initActiveLink = '';
-    if (_matchPath(pathname, path + '/accounts')) {
-        initActiveLink = 'accounts';
-    } else if (_matchPath(pathname, path + '/contacts')) {
-        initActiveLink = 'contacts';
-    } else if (_matchPath(pathname, path + '/transfer')) {
-        initActiveLink = 'transfer';
-    }
-    const [activeLink, setActiveLink] = useState(initActiveLink);
+    const [activeLink, setActiveLink] = useState(initActiveLink(pathname, path));
 
     const handleMenuItemClick = useCallback((name) => {
         setActiveLink(name);
     });
+
+    return (
+        <SideBar>
+            <SideBar.Menu>
+                <SideBar.Menu.Item active={activeLink === 'accounts'} onClick={() => handleMenuItemClick('accounts')}>
+                    <NavLink to={`${url}/accounts`}>Tài khoản ngân hàng</NavLink>
+                </SideBar.Menu.Item>
+                <SideBar.Menu.Item active={activeLink === 'contacts'} onClick={() => handleMenuItemClick('contacts')}>
+                    <NavLink to={`${url}/contacts`}>Danh bạ</NavLink>
+                </SideBar.Menu.Item>
+                <SideBar.Menu.Item active={activeLink === 'transfers'} onClick={() => handleMenuItemClick('transfers')}>
+                    <NavLink to={`${url}/transfers`}>Chuyển khoản</NavLink>
+                </SideBar.Menu.Item>
+                <SideBar.Menu.Item active={activeLink === 'debts'} onClick={() => handleMenuItemClick('debts')}>
+                    <NavLink to={`${url}/debts`}>Nhắc nợ</NavLink>
+                </SideBar.Menu.Item>
+            </SideBar.Menu>
+
+            <SideBar.Content>
+                <Switch>
+                    <Route path={`${path}/accounts`} >
+                        <Accounts />
+                    </Route>
+                    <Route path={`${path}/contacts`}>
+                        <Contacts />
+                    </Route>
+                    <Route path={`${path}/transfers`}>
+                        <Transfers />
+                    </Route>
+                    <Route path={`${path}/debts`}>
+                        <Debts />
+                    </Route>
+                </Switch>
+            </SideBar.Content>
+        </SideBar>
+    );
+};
+
+function CustomerProfile(props) {
+    return (
+        <div></div>
+    );
+}
+
+function CustomerUI(props) {
+    const { url, path } = useRouteMatch();
 
     useEffect(() => {
         document.title = 'Internet Banking: Xin chào';
@@ -39,35 +93,17 @@ function MainLayout(props) {
 
     return (
         <React.Fragment>
-            <SideBar>
-                <SideBar.Menu>
-                    <SideBar.Menu.Item active={activeLink === 'accounts'} onClick={() => handleMenuItemClick('accounts')}>
-                        <NavLink to={`${url}/accounts`}>Tài khoản</NavLink>
-                    </SideBar.Menu.Item>
-                    <SideBar.Menu.Item active={activeLink === 'contacts'} onClick={() => handleMenuItemClick('contacts')}>
-                        <NavLink to={`${url}/contacts`}>Danh bạ</NavLink>
-                    </SideBar.Menu.Item>
-                    <SideBar.Menu.Item active={activeLink === 'transfer'} onClick={() => handleMenuItemClick('transfer')}>
-                        <NavLink to={`${url}/transfer`}>Chuyển khoản</NavLink>
-                    </SideBar.Menu.Item>
-                </SideBar.Menu>
-
-                <SideBar.Content>
-                    <Switch>
-                        <Route path={`${path}/accounts`} >
-                            <Accounts />
-                        </Route>
-                        <Route path={`${path}/contacts`}>
-                            <Contacts />
-                        </Route>
-                        <Route path={`${path}/transfer`}>
-                            <Transfer />
-                        </Route>
-                    </Switch>
-                </SideBar.Content>
-            </SideBar>
+            <TopNavigation />
+            <Switch>
+                <Route path={`${path}/profile`}>
+                    <CustomerProfile />
+                </Route>
+                <Route>
+                    <CustomerSideBar />
+                </Route>
+            </Switch>
         </React.Fragment>
-    )
+    );
 };
 
-export default MainLayout;
+export default CustomerUI;
