@@ -21,6 +21,16 @@ export const fetchLogin = (payload) => {
  * @param {string} payload.userType
  * @param {string} payload.userId
  * @param {string} payload.refreshToken
+ * @returns {{
+ *      ok: boolean,
+ *      status: number,
+ *      body: {
+ *          userId: number,
+ *          userType: string,
+ *          accessToken: string,
+ *          refreshToken: string
+ *      }
+ * }}
  */
 export const fetchNewAccessToken = (payload) => {
     return request({
