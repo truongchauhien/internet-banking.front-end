@@ -4,10 +4,12 @@ import { Route, Redirect } from "react-router-dom";
 import _ from 'lodash';
 
 function PrivateRoute({ children, ...rest }) {
-    const isAuthenticated = useSelector(state => state.login.isAuthenticated);
+    const isAuthenticated = useSelector(state => state.authentication.isAuthenticated);
+    const isRestoring = useSelector(state => state.authentication.isRestoring);
     return (
         <Route {...rest}>
-            {isAuthenticated ? children : <Redirect to='/login' />}
+            {isRestoring ? null :
+                isAuthenticated ? children : <Redirect to='/login' />}
         </Route>
     );
 }
