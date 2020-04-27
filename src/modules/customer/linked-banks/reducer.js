@@ -31,3 +31,5 @@ export const linkedBanksReducer = combineReducers({
     byId: byIdReducer,
     allIds: allIdsReducer
 });
+
+export default linkedBanksReducer;
