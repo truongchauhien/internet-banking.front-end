@@ -1,3 +1,4 @@
+const path = require('path');
 const envConfigPlugin = require('./webpack.plugin.env-config');
 
 module.exports = {
@@ -37,7 +38,7 @@ module.exports = {
         envConfigPlugin
     ],
     output: {
-        path: __dirname + '/public/assets/scripts',
+        path: path.resolve(__dirname, 'public/assets/scripts'),
         publicPath: '/assets/scripts',
         filename: 'bundle.js'
     }
