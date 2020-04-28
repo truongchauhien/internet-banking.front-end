@@ -1,3 +1,4 @@
+import { combineReducers } from "redux";
 import {
     LOGIN_REQUEST, LOGIN_FAILURE, LOGIN_SUCCESS,
     LOGOUT,
@@ -5,13 +6,10 @@ import {
     LOGIN_RESTORE_FAILURE,
     LOGIN_RESTORE_SUCCESS,
 } from "./actions";
-import { combineReducers } from "redux";
+import passwordResetReducer from './password-reset/reducer';
 
-const initLoginState = {
+const initAuthenticationState = {
     isAuthenticated: false,
-    loginUI: {
-        isFetching: false,
-    },
     isRestoring: true,
     userData: {
         userId: null,
@@ -19,10 +17,13 @@ const initLoginState = {
         fullName: null,
         email: null,
         userType: null
+    },
+    login: {
+        isFetching: false
     }
 };
 
-const isAuthenticatedReducer = (state = initLoginState.isAuthenticated, action) => {
+const isAuthenticatedReducer = (state = initAuthenticationState.isAuthenticated, action) => {
     switch (action.type) {
         case LOGOUT:
             return false;
@@ -34,10 +35,10 @@ const isAuthenticatedReducer = (state = initLoginState.isAuthenticated, action) 
     }
 };
 
-const userDataReducer = (state = initLoginState.userData, action) => {
+const userDataReducer = (state = initAuthenticationState.userData, action) => {
     switch (action.type) {
         case LOGOUT:
-            return initLoginState.userData;
+            return initAuthenticationState.userData;
         case LOGIN_SUCCESS:
         case LOGIN_RESTORE_SUCCESS:
             return Object.assign({}, state, action.payload);
@@ -46,7 +47,7 @@ const userDataReducer = (state = initLoginState.userData, action) => {
     }
 };
 
-const isRestoringReducer = (state = initLoginState.isRestoring, action) => {
+const isRestoringReducer = (state = initAuthenticationState.isRestoring, action) => {
     switch (action.type) {
         case LOGIN_RESTORE_REQUEST:
             return true;
@@ -58,7 +59,7 @@ const isRestoringReducer = (state = initLoginState.isRestoring, action) => {
     }
 };
 
-const loginUIReducer = (state = initLoginState.loginUI, action) => {
+const loginReducer = (state = initAuthenticationState.login, action) => {
     switch (action.type) {
         case LOGIN_REQUEST:
             return Object.assign({}, state, { isFetching: true });
@@ -70,11 +71,12 @@ const loginUIReducer = (state = initLoginState.loginUI, action) => {
     }
 };
 
-const loginReducer = combineReducers({
+const authentication = combineReducers({
     isAuthenticated: isAuthenticatedReducer,
-    userData: userDataReducer,
     isRestoring: isRestoringReducer,
-    loginUI: loginUIReducer,
+    userData: userDataReducer,
+    login: loginReducer,
+    passwordReset: passwordResetReducer
 });
 
-export default loginReducer;
+export default authentication;
