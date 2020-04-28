@@ -40,3 +40,37 @@ export const fetchNewAccessToken = (payload) => {
         useAccessToken: false
     });
 };
+
+/**
+ * 
+ * @param {object} payload
+ * @param {'customer'|'employee'|'administrator'} payload.userType
+ * @param {string} payload.email
+ */
+export const createPasswordReset = ({ userType, ...body }) => request({
+    method: 'POST',
+    resource: '/api/auth/password-reset',
+    params: {
+        userType
+    },
+    body,
+    useAccessToken: false
+});
+
+/**
+ * 
+ * @param {object} payload
+ * @param {'customer'|'employee'|'administrator'} payload.userType
+ * @param {string} payload.email
+ * @param {number} payload.otp
+ * @param {string} payload.newPassword
+ */
+export const confirmPasswordReset = ({ userType, ...body }) => request({
+    method: 'POST',
+    resource: '/api/auth/password-reset-confirmation',
+    params: {
+        userType
+    },
+    body,
+    useAccessToken: false
+});
