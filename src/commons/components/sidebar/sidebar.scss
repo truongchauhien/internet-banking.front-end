@@ -1,9 +1,9 @@
-$sidebar-width: 200px;
+$menu-width: 200px;
 
-.side-bar {
+.menu {
     margin: 0;
     padding: 0;
-    width: $sidebar-width;
+    width: $menu-width;
     height: 100%;
     background-color: #4E8FD8;
     position: fixed;
@@ -27,6 +27,6 @@ $sidebar-width: 200px;
 }
 
 .content {
-    margin-left: $sidebar-width;
+    margin-left: $menu-width;
     overflow: hidden;
 }

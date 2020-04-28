@@ -6,70 +6,42 @@ import Accounts from './accounts/accounts';
 import Contacts from './contacts/contacts';
 import Transfers from './transfers/transfers';
 import Debts from './debts/debts';
+import TopNavigation from './top-navigation/top-navigation';
+import Profile from './profile/profile';
 import styles from './customer.scss';
-import { TopNavigation } from './top-navigation/top-navigation';
-
-const checkMatch = (path1, path2) => {
-    return matchPath(path1, {
-        path: path2,
-        exact: false,
-        strict: false,
-    }) !== null;
-}
-
-function initActiveLink(pathname, path) {
-    if (checkMatch(pathname, path + '/accounts')) {
-        return 'accounts';
-    } else if (checkMatch(pathname, path + '/contacts')) {
-        return 'contacts';
-    } else if (checkMatch(pathname, path + '/transfers')) {
-        return 'transfers';
-    } else if (checkMatch(pathname, path + '/debts')) {
-        return 'debts';
-    } else {
-        return ''
-    }
-};
 
 function CustomerSideBar(props) {
-    const { url, path } = useRouteMatch();
-    const { pathname } = useLocation();
-
-    const [activeLink, setActiveLink] = useState(initActiveLink(pathname, path));
-
-    const handleMenuItemClick = useCallback((name) => {
-        setActiveLink(name);
-    });
+    const match = useRouteMatch();
 
     return (
         <SideBar>
             <SideBar.Menu>
-                <SideBar.Menu.Item active={activeLink === 'accounts'} onClick={() => handleMenuItemClick('accounts')}>
-                    <NavLink to={`${url}/accounts`}>Tài khoản ngân hàng</NavLink>
+                <SideBar.Menu.Item>
+                    <NavLink to={`${match.url}/accounts`} activeClassName={styles.activeSidebarMenuItem}>Tài khoản ngân hàng</NavLink>
                 </SideBar.Menu.Item>
-                <SideBar.Menu.Item active={activeLink === 'contacts'} onClick={() => handleMenuItemClick('contacts')}>
-                    <NavLink to={`${url}/contacts`}>Danh bạ</NavLink>
+                <SideBar.Menu.Item>
+                    <NavLink to={`${match.url}/contacts` } activeClassName={styles.activeSidebarMenuItem}>Danh bạ</NavLink>
                 </SideBar.Menu.Item>
-                <SideBar.Menu.Item active={activeLink === 'transfers'} onClick={() => handleMenuItemClick('transfers')}>
-                    <NavLink to={`${url}/transfers`}>Chuyển khoản</NavLink>
+                <SideBar.Menu.Item>
+                    <NavLink to={`${match.url}/transfers`} activeClassName={styles.activeSidebarMenuItem}>Chuyển khoản</NavLink>
                 </SideBar.Menu.Item>
-                <SideBar.Menu.Item active={activeLink === 'debts'} onClick={() => handleMenuItemClick('debts')}>
-                    <NavLink to={`${url}/debts`}>Nhắc nợ</NavLink>
+                <SideBar.Menu.Item>
+                    <NavLink to={`${match.url}/debts`} activeClassName={styles.activeSidebarMenuItem}>Nhắc nợ</NavLink>
                 </SideBar.Menu.Item>
             </SideBar.Menu>
 
             <SideBar.Content>
                 <Switch>
-                    <Route path={`${path}/accounts`} >
+                    <Route path={`${match.path}/accounts`} >
                         <Accounts />
                     </Route>
-                    <Route path={`${path}/contacts`}>
+                    <Route path={`${match.path}/contacts`}>
                         <Contacts />
                     </Route>
-                    <Route path={`${path}/transfers`}>
+                    <Route path={`${match.path}/transfers`}>
                         <Transfers />
                     </Route>
-                    <Route path={`${path}/debts`}>
+                    <Route path={`${match.path}/debts`}>
                         <Debts />
                     </Route>
                 </Switch>
@@ -78,14 +50,8 @@ function CustomerSideBar(props) {
     );
 };
 
-function CustomerProfile(props) {
-    return (
-        <div></div>
-    );
-}
-
 function CustomerUI(props) {
-    const { url, path } = useRouteMatch();
+    const match = useRouteMatch();
 
     useEffect(() => {
         document.title = 'Internet Banking: Xin chào';
@@ -95,8 +61,8 @@ function CustomerUI(props) {
         <React.Fragment>
             <TopNavigation />
             <Switch>
-                <Route path={`${path}/profile`}>
-                    <CustomerProfile />
+                <Route path={`${match.path}/profile`}>
+                    <Profile />
                 </Route>
                 <Route>
                     <CustomerSideBar />

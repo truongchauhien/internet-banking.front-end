@@ -20,28 +20,23 @@ SideBar.Content = (props) => {
 
 SideBar.Menu = (props) => {
     return (
-        <div className={styles.sideBar}>
+        <div className={styles.menu}>
             {props.children}
         </div>
     );
 };
 
 SideBar.Menu.Item = ({ active, children, ...restProps }) => {
-    if (React.isValidElement(children)) {
-        let modedchildren = children;
-        let newClassName = children.props.className;
-        if (active) {
-            newClassName = children.props.className + ' ' + styles.active;
-        }
-        modedchildren = React.cloneElement(children,
-            {
-                className: newClassName,
-                ...restProps
-            }
-        );
-        return modedchildren;
-    } else {
+    if (typeof children === 'string') {
         return (<a {...restProps} className={active ? styles.active : undefined}>{children}</a>);
+    } else if (React.isValidElement(children)) {
+        const newClassName = `${children.props.className} ${active ? styles.active : ''}`;
+        return React.cloneElement(children, {
+            className: newClassName,
+            ...restProps
+        });
+    } else {
+        return null;
     }
 };
 

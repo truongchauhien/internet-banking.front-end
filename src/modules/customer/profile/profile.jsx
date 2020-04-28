@@ -1,42 +1,22 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { useHistory, Switch, Route, useRouteMatch, useLocation } from "react-router-dom";
+import { useHistory, Switch, Route, useRouteMatch, useLocation, NavLink } from "react-router-dom";
 import SideBar from "../../../commons/components/sidebar/sidebar";
 import PasswordChange from './password-change/password-change';
-import { isMatch } from '../../../commons/utils/react-router-utils';
-
-function chooseActiveLink(currentPath, currentMatchPath) {
-    if (isMatch(currentPath, currentMatchPath + '/change-password')) {
-        return 'change-password';
-    } else {
-        return '';
-    }
-};
+import styles from './profile.scss';
 
 export const Profile = (props) => {
     const match = useRouteMatch();
-    const currentLocation = useLocation();
-    const reactRouterHistory = useHistory();
-
-    const [activeLink, setActiveLink] = useState(chooseActiveLink(currentLocation.pathname, match.path));
-
-    useEffect(() => {
-        setActiveLink(chooseActiveLink(currentLocation.pathname, match.path));
-    }, [match]);
-
-    const handleChangePassordItemClick = useCallback(() => {
-        reactRouterHistory.push(`${match.url}/change-password`);
-    }, [match]);
 
     return (
         <SideBar>
             <SideBar.Menu>
-                <SideBar.Menu.Item active={activeLink === 'change-password'} onClick={handleChangePassordItemClick}>
-                    Đổi mật khẩu
+                <SideBar.Menu.Item>
+                    <NavLink to={`${match.url}/password-change`} activeClassName={styles.activeSidebarMenuItem}>Đổi mật khẩu</NavLink>
                 </SideBar.Menu.Item>
             </SideBar.Menu>
             <SideBar.Content>
                 <Switch>
-                    <Route path={`${match.path}/change-password`}>
+                    <Route path={`${match.path}/password-change`}>
                         <PasswordChange />
                     </Route>
                     <Route>
