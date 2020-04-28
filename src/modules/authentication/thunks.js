@@ -21,8 +21,10 @@ const LOCALSTORAGE_KEYS_OF_USER_DATA = {
 /**
  * 
  * @param {object} payload
+ * @param {string} payload.userType
  * @param {string} payload.userName
  * @param {string} payload.password
+ * @param {string} payload.captchaToken
  */
 export const thunkedLogin = (payload) => async (dispatch, getState) => {
     dispatch(loginRequest());
