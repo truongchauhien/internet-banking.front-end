@@ -1,9 +1,10 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Switch, Route, useRouteMatch, Link } from 'react-router-dom';
 import ReCaptcha from 'react-google-recaptcha';
 import { thunkedLogin } from './thunks';
 import styles from './login.scss';
+import PasswordReset from './password-reset/password-reset';
 
 function Login(props) {
     const [userName, setUserName] = useState('');
@@ -13,6 +14,8 @@ function Login(props) {
     const isAuthenticated = useSelector(state => state.authentication.isAuthenticated);
 
     const dispatch = useDispatch();
+
+    const match = useRouteMatch();
 
     const submit = () => {
         if (!captchaToken) {
@@ -52,14 +55,23 @@ function Login(props) {
         return <Redirect to='/' />;
     } else {
         return (
-            <div className={styles.loginForm}>
-                <label>Tên đăng nhập: <input placeholder='Tên đăng nhập ...' onChange={changeUserName} /></label>
-                <label>Mật khẩu: <input type='password' placeholder='Mật khẩu ...' onChange={changePassword} /></label>
-                <div className={styles.captcha}>
-                    <ReCaptcha sitekey={RECAPTCHA_SITE_KEY} onChange={changeCaptchaToken} />
-                </div>
-                <button type='submit' onClick={submit}>Đăng nhập</button>
-            </div>
+            <Switch>
+                <Route exact path='/login'>
+                    <div className={styles.loginForm}>
+                        <label>Tên đăng nhập: <input placeholder='Tên đăng nhập ...' onChange={changeUserName} /></label>
+                        <label>Mật khẩu: <input type='password' placeholder='Mật khẩu ...' onChange={changePassword} /></label>
+                        <Link className={styles.passwordResetLink} to={`${match.url}/password-reset`}>Quên mật khẩu</Link>
+                        <div className={styles.captcha}>
+                            <ReCaptcha sitekey={RECAPTCHA_SITE_KEY} onChange={changeCaptchaToken} />
+                        </div>
+                        <button type='submit' onClick={submit}>Đăng nhập</button>
+                    </div>
+                </Route>
+
+                <Route exact path={`${match.path}/password-reset`}>
+                    <PasswordReset />
+                </Route>
+            </Switch>
         );
     }
 }
