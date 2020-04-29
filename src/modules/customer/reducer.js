@@ -4,6 +4,7 @@ import contactsReducer from "./contacts/contacts-reducer";
 import transfersReducer from "./transfers/reducer";
 import linkedBanksReducer from "./linked-banks/reducer";
 import debtsReducer from "./debts/reducers";
+import transactionsReducer from "./transaction-history/reducer";
 import profileReducer from "./profile/reducer";
 
 export const customerReducer = combineReducers({
@@ -12,6 +13,7 @@ export const customerReducer = combineReducers({
     transfers: transfersReducer,
     linkedBanks: linkedBanksReducer,
     debts: debtsReducer,
+    transactions: transactionsReducer,
     profile: profileReducer
 });
 
