@@ -2,18 +2,23 @@ import request from "./commons/api-request";
 
 /**
  * 
- * @param {object} payload 
+ * @param {object} payload
+ * @param {string} payload.userType
  * @param {string} payload.userName
  * @param {string} payload.password
+ * @param {string} payload.captchaToken
  */
-export const fetchLogin = (payload) => {
+export const fetchLogin = ({ userType, ...body }) => {
     return request({
         method: 'POST',
         resource: '/api/auth/login',
         useAccessToken: false,
-        body: payload
+        params: {
+            userType
+        },
+        body: body
     });
-}
+};
 
 /**
  * 
@@ -32,11 +37,14 @@ export const fetchLogin = (payload) => {
  *      }
  * }}
  */
-export const fetchNewAccessToken = (payload) => {
+export const fetchNewAccessToken = ({ userType, ...body }) => {
     return request({
         method: 'POST',
         resource: '/api/auth/token',
-        body: payload,
+        params: {
+            userType
+        },
+        body: body,
         useAccessToken: false
     });
 };
