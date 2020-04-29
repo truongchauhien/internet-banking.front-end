@@ -2,23 +2,19 @@ import React, { useCallback, useMemo, useState, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import Message from '../../../../commons/components/message/message';
 import Loader from '../../../../commons/components/loader/loader';
-import AccountSelector from '../commons/account-selector/account-selector';
+import AccountSelector from '../../commons/account-selector/account-selector';
 import { thunkedCreateIntrabankTransfer, thunkedConfirmIntrabankTransfer } from './thunks';
 import { clearIntrabankTransfer } from './actions';
-import styles from './intrabank.scss';
-import { showModal } from '../../commons/modals/actions';
 import ContactSelectionModal from '../../commons/contact-selection-modal/contact-selection-modal';
+import styles from './intrabank.scss';
 
 const IntraBank = (props) => {
     const dispatch = useDispatch();
 
     const { byId: accounts, allIds: accountIds } = useSelector(state => state.customer.accounts);
-    const accountArray = useMemo(() => accountIds.map(id => accounts[id]), [accountIds]);
-
     const { byId: contacts, allIds: contactIds } = useSelector(state => state.customer.contacts);
-    const contactArray = useMemo(() => contactIds.map(id => contacts[id]), [contactIds]);
 
-    const [selectedAccountId, setSelectedAccountId] = useState();
+    const [selectedAccountId, setSelectedAccountId] = useState('');
     const [beneficiaryAccountNumber, setBeneficiaryAccountNumber] = useState('');
     const [isContactSelectionModalOpen, setIsContactSelectionModalOpen] = useState(false);
     const [amount, setAmount] = useState(0);
@@ -99,7 +95,6 @@ const IntraBank = (props) => {
                         <legend>Tài khoản chuyển</legend>
                         <div>
                             <AccountSelector
-                                accounts={accountArray}
                                 selectedAccountId={selectedAccountId}
                                 onAccountSelect={handleOnAccountSelect}
                                 showedTypes={['CURRENT']}

@@ -7,12 +7,6 @@ import IntraBank from './intrabank/intrabank';
 import styles from './transfers.scss';
 
 export const Transfers = (props) => {
-    const reduxDispatch = useDispatch();
-
-    useEffect(() => {
-        reduxDispatch(thunkedFetchAccounts());
-    }, []);
-
     return (
         <Tabs defaultActiveLabel='Chuyển khoản nội bộ'>
             <Tabs.Tab label='Chuyển khoản nội bộ' >
