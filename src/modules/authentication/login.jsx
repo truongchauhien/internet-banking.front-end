@@ -60,7 +60,7 @@ function Login(props) {
                     <div className={styles.loginForm}>
                         <label>Tên đăng nhập: <input placeholder='Tên đăng nhập ...' onChange={changeUserName} /></label>
                         <label>Mật khẩu: <input type='password' placeholder='Mật khẩu ...' onChange={changePassword} /></label>
-                        <Link className={styles.passwordResetLink} to={`${match.url}/password-reset`}>Quên mật khẩu</Link>
+                        <Link className={styles.passwordResetLink} to={`${match.url}/password-reset`}>Quên mật khẩu ...</Link>
                         <div className={styles.captcha}>
                             <ReCaptcha sitekey={RECAPTCHA_SITE_KEY} onChange={changeCaptchaToken} />
                         </div>
