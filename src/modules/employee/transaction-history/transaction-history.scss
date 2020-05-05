@@ -1,0 +1,28 @@
+.transaction-history-table {    
+    table {
+        table-layout: fixed;
+        width: 700px;
+        max-width: 100%;
+        border-collapse: collapse;
+        border: 3px solid purple;
+
+        thead {
+            th {
+                border: 3px solid purple;
+            }
+        }
+        
+        tbody {
+            tr {
+                td:nth-child(4) {
+                    text-align: center;
+                }
+
+                td {
+                    border-bottom: 1px solid;
+                    border-left: 1px solid;
+                }
+            }
+        }
+    }
+}
