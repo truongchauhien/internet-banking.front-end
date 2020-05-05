@@ -33,7 +33,7 @@ export const Dropdown = ({ label, children, className }) => {
     );
 };
 
-Dropdown.Item = ({ onClick, children }) => {
+Dropdown.Item = ({ children, onClick, ...restProps }) => {
     const handleClick = (event) => {
         event.preventDefault();
         onClick && onClick();
@@ -43,9 +43,11 @@ Dropdown.Item = ({ onClick, children }) => {
         return (
             <a onClick={handleClick} href="#">{children}</a>
         );
+    } else if (React.isValidElement(children)) {
+        return React.cloneElement(children, { ...restProps });
+    } else {
+        return null;
     }
-
-    return null;
 };
 
 export default Dropdown;
