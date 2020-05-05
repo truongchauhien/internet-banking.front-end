@@ -1,5 +1,5 @@
-import React, { useCallback, useState, useEffect } from 'react';
-import { useHistory, Switch, Route, useRouteMatch, useLocation, NavLink } from "react-router-dom";
+import React from 'react';
+import { Switch, Route, useRouteMatch, useLocation, NavLink } from "react-router-dom";
 import SideBar from "../../../commons/components/sidebar/sidebar";
 import PasswordChange from './password-change/password-change';
 import styles from './profile.scss';
@@ -18,9 +18,6 @@ export const Profile = (props) => {
                 <Switch>
                     <Route path={`${match.path}/password-change`}>
                         <PasswordChange />
-                    </Route>
-                    <Route>
-                        <h1>Hồ sơ cá nhân</h1>
                     </Route>
                 </Switch>
             </SideBar.Content>
