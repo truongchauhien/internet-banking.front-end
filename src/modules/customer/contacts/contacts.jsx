@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
-import { thunkedFetchContacts, thunkedDeleteContact, thunkedPatchContact, thunkedCreateContact } from './contacts-thunks';
+import { thunkedFetchContacts, thunkedDeleteContact, thunkedPatchContact, thunkedCreateContact } from './thunks';
 import { thunkedFetchLinkedBanks } from '../linked-banks/thunks';
 import {
     contactCreationModalOpenStatusChange,
     contactModificationInit,
     contactModificationModalOpenStatusChange
-} from './contacts-actions';
+} from './actions';
 import ContactCreationModal from './contact-creation-modal';
 import ContactModificationModal from './contact-modification-modal';
 import styles from './contacts.scss';

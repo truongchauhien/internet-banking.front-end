@@ -14,7 +14,7 @@ import {
     createContactFailure,
     createContactSuccess,
     contactCreationInit
-} from './contacts-actions';
+} from './actions';
 import {
     fetchContacts,
     deleteContact,

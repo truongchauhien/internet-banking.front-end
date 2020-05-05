@@ -18,7 +18,7 @@ import {
     CONTACT_MODIFICATION_MODAL_OPEN_STATUS_CHANGE,
     CONTACT_MODIFICATION_INIT,
     CONTACT_CREATION_INIT
-} from './contacts-actions';
+} from './actions';
 import { convertArrayToObject } from '../../../commons/utils/array-utils';
 import { combineReducers } from 'redux';
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Modal from '../../../../commons/components/modal/modal';
-import { thunkedFetchContacts } from '../../contacts/contacts-thunks';
+import { thunkedFetchContacts } from '../../contacts/thunks';
 import styles from './contact-selection-modal.scss';
 
 export const ContactSelectionModal = ({ isOpen = false, onClickOutside, onContactSelect, internalContactOnly = false }) => {

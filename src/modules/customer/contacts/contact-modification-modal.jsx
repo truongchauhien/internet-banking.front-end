@@ -7,7 +7,7 @@ import styles from './contact-modification-modal.scss';
 import {
     contactModificationInputChange,
     contactModificationModalOpenStatusChange,
-} from './contacts-actions';
+} from './actions';
 
 export const ContactModificationModal = ({ onSubmit }) => {
     const dispatch = useDispatch();

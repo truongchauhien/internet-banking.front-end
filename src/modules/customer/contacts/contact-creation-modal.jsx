@@ -8,7 +8,7 @@ import {
     contactCreationInit,
     contactCreationInputChange,
     contactCreationModalOpenStatusChange
-} from './contacts-actions';
+} from './actions';
 
 export const ContactCreationModal = ({ onSubmit }) => {
     const dispatch = useDispatch();
