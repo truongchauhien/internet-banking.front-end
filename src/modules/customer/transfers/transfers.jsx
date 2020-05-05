@@ -1,8 +1,5 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React from 'react';
 import Tabs from '../../../commons/components/tabs/tabs';
-import { thunkedFetchAccounts } from '../accounts/accounts-thunks';
-import { thunkedFetchContacts } from '../contacts/contacts-thunks';
 import IntraBank from './intrabank/intrabank';
 import styles from './transfers.scss';
 
@@ -14,9 +11,6 @@ export const Transfers = (props) => {
             </Tabs.Tab>
             <Tabs.Tab label='Chuyển khoản liên ngân hàng'>
                 <h1>Liên ngân hàng</h1>
-            </Tabs.Tab>
-            <Tabs.Tab label='Chuyển khoản ngoại tệ'>
-                <h1>Ngoại tệ</h1>
             </Tabs.Tab>
         </Tabs>
     );
