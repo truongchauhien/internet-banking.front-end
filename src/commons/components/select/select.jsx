@@ -18,7 +18,7 @@ export const Select = ({
     return (
         <select id={id} onChange={handleOnChange} defaultValue={defaultValue} value={value}>
             {placeHolder &&
-                <option hidden>{placeHolder}</option>
+                <option disabled value=''>{placeHolder}</option>
             }
             {
                 children ||
