@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
-import accountsReducer from './accounts/accounts-reducer';
-import contactsReducer from "./contacts/contacts-reducer";
+import accountsReducer from './accounts/reducer';
+import contactsReducer from "./contacts/reducer";
 import transfersReducer from "./transfers/reducer";
 import linkedBanksReducer from "./linked-banks/reducer";
 import debtsReducer from "./debts/reducers";
