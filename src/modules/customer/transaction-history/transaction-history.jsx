@@ -13,10 +13,10 @@ const TRANSACTIONS_TYPES_DISPLAY = {
     INTERBANK_TRANSFER: 'Chuyển khoản liên ngân hàng',
     INTERBANK_RECEIVE: 'Nhận tiền',
     INTERBANK_TRANSFER_FEE: 'Phí chuyển khoản liên ngân hàng',
-    DEPOSITE: 'Nạp tiền',
+    DEPOSIT: 'Nạp tiền',
     PAY_DEBT_TRANSFER: 'Thanh toán nhắc nợ',
     PAY_DEBT_RECEIVE: 'Nhận tiền trả nợ'
-}
+};
 
 export const TransactionHistory = (props) => {
     const dispatch = useDispatch();
