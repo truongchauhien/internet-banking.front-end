@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Accordion from '../../../commons/components/accordion/accordion';
-import { thunkedFetchAccounts } from './accounts-thunks';
+import { thunkedFetchAccounts } from './thunks';
 import styles from './accounts.scss';
 
 export const Accounts = () => {
-    const [accordionActiveIndex, setAccordionActiveIndex] = useState(-1);
-
     const dispatch = useDispatch();
 
+    const [accordionActiveIndex, setAccordionActiveIndex] = useState(-1);
+    
     const accountAllIds = useSelector(state => state.customer.accounts.allIds);
     const accountById = useSelector(state => state.customer.accounts.byId);
+    const customerId = useSelector(state => state.authentication.userData.userId);
 
     useEffect(() => {
-        dispatch(thunkedFetchAccounts());
+        dispatch(thunkedFetchAccounts({
+            customerId
+        }));
     }, []);
 
     const handleAccordionTitleClick = (e, { index }) => {
@@ -25,7 +28,7 @@ export const Accounts = () => {
             <Accordion>
                 {accountAllIds && accountAllIds.map((accountId, index) => {
                     const account = accountById[accountId];
-                    
+
                     if (account.accountType === 'CURRENT') {
                         return (
                             <React.Fragment key={account.accountNumber}>

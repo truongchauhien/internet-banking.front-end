@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Select from '../../../../commons/components/select/select';
-import { thunkedFetchAccounts } from '../../accounts/accounts-thunks';
+import { thunkedFetchAccounts } from '../../accounts/thunks';
 
 /**
  * 

@@ -2,7 +2,7 @@ import {
     FECTH_ACCOUNTS_REQUEST,
     FETCH_ACCOUNTS_SUCCESS,
     FETCH_ACCOUNTS_FAILURE
-} from './account-actions';
+} from './actions';
 import { combineReducers } from 'redux';
 import { convertArrayToObject } from '../../../commons/utils/array-utils';
 
