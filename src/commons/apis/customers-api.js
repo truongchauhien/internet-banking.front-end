@@ -13,3 +13,19 @@ export const createCustomerPasswordChange = ({ customerId, ...body }) => request
     body: body,
     useAccessToken: true
 });
+
+/**
+ * 
+ * @param {object} payload
+ * @param {object} payload.userName
+ * @param {object} payload.password
+ * @param {object} payload.fullName
+ * @param {object} payload.email
+ * @param {object} payload.phone
+ */
+export const createCustomer = (payload) => request({
+    resource: '/api/customers',
+    method: 'POST',
+    body: payload,
+    useAccessToken: true
+});
