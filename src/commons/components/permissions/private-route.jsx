@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 function PrivateRoute({ children, ...rest }) {
     const isAuthenticated = useSelector(state => state.authentication.isAuthenticated);
-    const isRestoring = useSelector(state => state.authentication.isRestoring);
+    const isRestoring = useSelector(state => state.authentication.loginRestoration.isRestoring);
     return (
         <Route {...rest}>
             {isRestoring ? null :
