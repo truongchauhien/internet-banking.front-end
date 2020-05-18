@@ -1,29 +1,23 @@
 import { combineReducers } from "redux";
-import {
-    LOGIN_REQUEST, LOGIN_FAILURE, LOGIN_SUCCESS,
-    LOGOUT,
-    LOGIN_RESTORE_REQUEST,
-    LOGIN_RESTORE_FAILURE,
-    LOGIN_RESTORE_SUCCESS,
-} from "./actions";
+import { LOGIN_SUCCESS } from "./login/actions";
+import { LOGOUT } from "./logout/actions";
+import { LOGIN_RESTORE_SUCCESS } from "./login-restoration/actions";
+import loginReducer from "./login/reducer";
 import passwordResetReducer from './password-reset/reducer';
+import loginRestorationReducer from "./login-restoration/reducer";
 
-const initAuthenticationState = {
+const initState = {
     isAuthenticated: false,
-    isRestoring: true,
     userData: {
         userId: null,
         userName: null,
         fullName: null,
         email: null,
         userType: null
-    },
-    login: {
-        isFetching: false
     }
 };
 
-const isAuthenticatedReducer = (state = initAuthenticationState.isAuthenticated, action) => {
+const isAuthenticatedReducer = (state = initState.isAuthenticated, action) => {
     switch (action.type) {
         case LOGOUT:
             return false;
@@ -35,10 +29,10 @@ const isAuthenticatedReducer = (state = initAuthenticationState.isAuthenticated,
     }
 };
 
-const userDataReducer = (state = initAuthenticationState.userData, action) => {
+const userDataReducer = (state = initState.userData, action) => {
     switch (action.type) {
         case LOGOUT:
-            return initAuthenticationState.userData;
+            return initState.userData;
         case LOGIN_SUCCESS:
         case LOGIN_RESTORE_SUCCESS:
             return Object.assign({}, state, action.payload);
@@ -47,36 +41,12 @@ const userDataReducer = (state = initAuthenticationState.userData, action) => {
     }
 };
 
-const isRestoringReducer = (state = initAuthenticationState.isRestoring, action) => {
-    switch (action.type) {
-        case LOGIN_RESTORE_REQUEST:
-            return true;
-        case LOGIN_RESTORE_FAILURE:
-        case LOGIN_RESTORE_SUCCESS:
-            return false;
-        default:
-            return state;
-    }
-};
-
-const loginReducer = (state = initAuthenticationState.login, action) => {
-    switch (action.type) {
-        case LOGIN_REQUEST:
-            return Object.assign({}, state, { isFetching: true });
-        case LOGIN_FAILURE:
-        case LOGIN_SUCCESS:
-            return Object.assign({}, state, { isFetching: false });
-        default:
-            return state;
-    }
-};
-
-const authentication = combineReducers({
+const authenticationReducer = combineReducers({
     isAuthenticated: isAuthenticatedReducer,
-    isRestoring: isRestoringReducer,
     userData: userDataReducer,
     login: loginReducer,
+    loginRestoration: loginRestorationReducer,
     passwordReset: passwordResetReducer
 });
 
-export default authentication;
+export default authenticationReducer;

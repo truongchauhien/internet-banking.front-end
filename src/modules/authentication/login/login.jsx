@@ -4,7 +4,7 @@ import { Redirect, Switch, Route, useRouteMatch, Link } from 'react-router-dom';
 import ReCaptcha from 'react-google-recaptcha';
 import { thunkedLogin } from './thunks';
 import styles from './login.scss';
-import PasswordReset from './password-reset/password-reset';
+import PasswordReset from '../password-reset/password-reset';
 
 function Login(props) {
     const [userName, setUserName] = useState('');

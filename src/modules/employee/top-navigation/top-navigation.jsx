@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouteMatch, useHistory, Link } from 'react-router-dom';
 import Dropdown from '../../../commons/components/dropdown/dropdown';
-import { thunkedLogout } from '../../authentication/thunks';
+import { thunkedLogout } from '../../authentication/logout/thunks';
 import styles from './top-navigation.scss';
 
 export const TopNavigation = (props) => {
