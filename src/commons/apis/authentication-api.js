@@ -8,17 +8,12 @@ import request from "./commons/api-request";
  * @param {string} payload.password
  * @param {string} payload.captchaToken
  */
-export const fetchLogin = ({ userType, ...body }) => {
-    return request({
-        method: 'POST',
-        resource: '/api/auth/login',
-        useAccessToken: false,
-        params: {
-            userType
-        },
-        body: body
-    });
-};
+export const fetchLogin = (payload) => request({
+    method: 'POST',
+    resource: '/api/auth/login',
+    body: payload,
+    useAccessToken: false
+});
 
 /**
  * 
@@ -37,17 +32,12 @@ export const fetchLogin = ({ userType, ...body }) => {
  *      }
  * }}
  */
-export const fetchNewAccessToken = ({ userType, ...body }) => {
-    return request({
-        method: 'POST',
-        resource: '/api/auth/token',
-        params: {
-            userType
-        },
-        body: body,
-        useAccessToken: false
-    });
-};
+export const fetchNewAccessToken = (payload) => request({
+    method: 'POST',
+    resource: '/api/auth/token',
+    body: payload,
+    useAccessToken: false
+});
 
 /**
  * 
@@ -55,13 +45,10 @@ export const fetchNewAccessToken = ({ userType, ...body }) => {
  * @param {'customer'|'employee'|'administrator'} payload.userType
  * @param {string} payload.email
  */
-export const createPasswordReset = ({ userType, ...body }) => request({
+export const createPasswordReset = (payload) => request({
     method: 'POST',
     resource: '/api/auth/password-reset',
-    params: {
-        userType
-    },
-    body,
+    body: payload,
     useAccessToken: false
 });
 
@@ -73,12 +60,9 @@ export const createPasswordReset = ({ userType, ...body }) => request({
  * @param {number} payload.otp
  * @param {string} payload.newPassword
  */
-export const confirmPasswordReset = ({ userType, ...body }) => request({
+export const confirmPasswordReset = (payload) => request({
     method: 'POST',
     resource: '/api/auth/password-reset-confirmation',
-    params: {
-        userType
-    },
-    body,
+    body: payload,
     useAccessToken: false
 });
