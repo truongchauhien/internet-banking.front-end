@@ -1,7 +1,7 @@
 import { combineReducers } from "redux";
-import { convertArrayToObject } from '../../../commons/utils/array-utils';
+import { convertArrayToObject } from '../../../../commons/utils/array-utils';
 import {
-    LINKED_BANKS_FETCH_SUCCESS
+    FETCH_BANKS_SUCCESS
 } from "./actions";
 
 const initState = {
@@ -11,7 +11,7 @@ const initState = {
 
 const byIdReducer = (state = initState.byId, action) => {
     switch (action.type) {
-        case LINKED_BANKS_FETCH_SUCCESS:
+        case FETCH_BANKS_SUCCESS:
             return convertArrayToObject(action.payload, 'id')
         default:
             return state;
@@ -20,16 +20,16 @@ const byIdReducer = (state = initState.byId, action) => {
 
 const allIdsReducer = (state = initState.allIds, action) => {
     switch (action.type) {
-        case LINKED_BANKS_FETCH_SUCCESS:
+        case FETCH_BANKS_SUCCESS:
             return action.payload.map(item => item.id);
         default:
             return state;
     }
 };
 
-export const linkedBanksReducer = combineReducers({
+export const banksReducer = combineReducers({
     byId: byIdReducer,
     allIds: allIdsReducer
 });
 
-export default linkedBanksReducer;
+export default banksReducer;
