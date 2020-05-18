@@ -20,14 +20,14 @@ export const ContactCreationModal = ({ onSubmit }) => {
     } = useSelector(state => state.customer.contacts.contactCreation.fields);
     const isModalOpen = useSelector(state => state.customer.contacts.contactCreation.isModalOpen);
 
-    const { byId: linkedBanks, allIds: linkedBankIds } = useSelector(state => state.customer.linkedBanks);
+    const { byId: banks, allIds: bankIds } = useSelector(state => state.commons.banks);
     const bankArray = useMemo(() => {
-        const linkedBankArray = linkedBankIds
-            .map(id => linkedBanks[id])
+        const bankArray = bankIds
+            .map(id => banks[id])
             .map(bank => ({ label: bank.name, value: bank.id }));
 
-        return [{ value: '', label: 'Tài khoản nội bộ' }, ...linkedBankArray];
-    }, [linkedBanks]);
+        return [{ value: '', label: 'Tài khoản nội bộ' }, ...bankArray];
+    }, [banks]);
 
     const handleContactAccountNumberInputChange = (event) => {
         dispatch(contactCreationInputChange({
@@ -43,7 +43,7 @@ export const ContactCreationModal = ({ onSubmit }) => {
         }));
     };
 
-    const handleLinkedBankSelectChange = (selectedValue) => {
+    const handleBankSelectChange = (selectedValue) => {
         dispatch(contactCreationInputChange({
             field: 'bankId',
             value: event.target.value
@@ -75,7 +75,7 @@ export const ContactCreationModal = ({ onSubmit }) => {
                     <label>Số tài khoản:</label>
                     <input value={contactAccountNumber} onChange={handleContactAccountNumberInputChange} />
                     <label>Ngân hàng:</label>
-                    <Select options={bankArray} value={contactBankId} onChange={handleLinkedBankSelectChange} />
+                    <Select options={bankArray} value={contactBankId} onChange={handleBankSelectChange} />
                     <label>Tên liên hệ:</label>
                     <input value={contactName} onChange={handleContactNameInputChange} />
                     <button onClick={handleCancelClick}>Hủy</button>
