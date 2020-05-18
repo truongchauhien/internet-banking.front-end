@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
 import { thunkedFetchContacts, thunkedDeleteContact, thunkedPatchContact, thunkedCreateContact } from './thunks';
-import { thunkedFetchLinkedBanks } from '../linked-banks/thunks';
+import { thunkedFetchBanks } from '../../commons/modules/banks/thunks';
 import {
     contactCreationModalOpenStatusChange,
     contactModificationInit,
@@ -13,34 +13,37 @@ import ContactModificationModal from './contact-modification-modal';
 import styles from './contacts.scss';
 
 export const Contacts = (props) => {
-    const reduxDispatch = useDispatch();
+    const dispatch = useDispatch();
     const { byId: contacts, allIds: contactAllIds } = useSelector(state => state.customer.contacts);
-    const { byId: linkedBanks } = useSelector(state => state.customer.linkedBanks);
+    const { byId: banks } = useSelector(state => state.commons.banks);
 
     useEffect(() => {
-        reduxDispatch(thunkedFetchContacts());
-        reduxDispatch(thunkedFetchLinkedBanks());
+        (async () => {
+            // Workaround: fetch sequentially.
+            await dispatch(thunkedFetchBanks());
+            await dispatch(thunkedFetchContacts());
+        })();
     }, []);
 
     const handleShowContactCreationModalButtonClick = () => {
-        reduxDispatch(contactCreationModalOpenStatusChange(true));
+        dispatch(contactCreationModalOpenStatusChange(true));
     };
 
     const handleSubmitNewContact = (newContact) => {
-        reduxDispatch(thunkedCreateContact(newContact));
+        dispatch(thunkedCreateContact(newContact));
     };
 
     const handleEditContactButtonClick = (contactId) => {
-        reduxDispatch(contactModificationInit(contacts[contactId]));
-        reduxDispatch(contactModificationModalOpenStatusChange(true));
+        dispatch(contactModificationInit(contacts[contactId]));
+        dispatch(contactModificationModalOpenStatusChange(true));
     };
 
     const handleDeleteContactButtonClick = (contactId) => {
-        reduxDispatch(thunkedDeleteContact({ id: contactId }));
+        dispatch(thunkedDeleteContact({ id: contactId }));
     };
 
     const handleSubmitModificatedContact = (modificatedContact) => {
-        reduxDispatch(thunkedPatchContact(modificatedContact));
+        dispatch(thunkedPatchContact(modificatedContact));
     }
 
     return (
@@ -77,8 +80,8 @@ export const Contacts = (props) => {
                                     </tr>
                                     <tr>
                                         <td>{contact.bankId ?
-                                            (linkedBanks[contact.bankId] ?
-                                                linkedBanks[contact.bankId].name :
+                                            (banks[contact.bankId] ?
+                                                banks[contact.bankId].name :
                                                 'Ngân hàng không còn được hỗ trợ')
                                             :
                                             'Tài khoản nội bộ'}
