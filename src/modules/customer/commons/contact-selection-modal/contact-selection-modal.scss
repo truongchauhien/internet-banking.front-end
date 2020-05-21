@@ -4,7 +4,8 @@
         width: 700px;
         max-width: 100%;
         border-collapse: collapse;
-
+        border: 3px solid purple;
+        
         thead {
             tr {
                 border-bottom: 3px solid purple;
@@ -17,10 +18,12 @@
 
         tbody {
             tr {
-                border-bottom: 3px solid black;
-
-                td:nth-child(3) {
+                & td:nth-child(3) {
                     text-align: center;
+                }
+
+                &:not(:last-child) td {
+                    border-bottom: 1px solid;
                 }
             }
         }

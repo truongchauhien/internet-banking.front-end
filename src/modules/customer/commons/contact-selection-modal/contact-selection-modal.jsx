@@ -4,23 +4,25 @@ import Modal from '../../../../commons/components/modal/modal';
 import { thunkedFetchContacts } from '../../contacts/thunks';
 import styles from './contact-selection-modal.scss';
 
-export const ContactSelectionModal = ({ isOpen = false, onClickOutside, onContactSelect, internalContactOnly = false }) => {
+export const ContactSelectionModal = ({ isOpen = false, onClickOutside, onContactSelect, types = ['internal', 'external'] }) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(thunkedFetchContacts());
     }, []);
-    
-    const { byId: contacts, allIds: contactIds } = useSelector(state => state.customer.contacts);
-    const contactArray = useMemo(() => {
-        if (!internalContactOnly) {
-            return contactIds.map(id => contacts[id]);
-        }
 
-        return contactIds.map(id => contacts[id]).filter(contact => !contact.bankId);
-    },
-        [contacts, internalContactOnly]
-    );
+    const { byId: contacts, allIds: contactIds } = useSelector(state => state.customer.contacts);
+    const { byId: banks } = useSelector(state => state.commons.banks);
+    const contactArray = useMemo(() => {
+        return contactIds
+            .map(id => contacts[id])
+            .filter(contact => {
+                const includeInternalContact = types.includes('internal');
+                const includeExternalContact = types.includes('external');
+                if (!contact.bankId && includeInternalContact) return true;
+                if (contact.bankId && includeExternalContact) return true;
+            });
+    }, [contacts, types]);
 
     const handleContactSelectButtonClick = (contactId) => {
         onContactSelect && onContactSelect(contactId);
@@ -44,13 +46,21 @@ export const ContactSelectionModal = ({ isOpen = false, onClickOutside, onContac
                         </thead>
                         <tbody>
                             {contactArray && contactArray.map(contact => (
-                                <tr key={contact.id}>
-                                    <td>{contact.name}</td>
-                                    <td>{contact.accountNumber}</td>
-                                    <td>
-                                        <button onClick={() => handleContactSelectButtonClick(contact.id)}>Chọn</button>
-                                    </td>
-                                </tr>
+                                <React.Fragment key={contact.id}>
+                                    <tr>
+                                        <td rowSpan='2'>{contact.name}</td>
+                                        <td>{contact.accountNumber}</td>
+                                        <td rowSpan='2'>
+                                            <button onClick={() => handleContactSelectButtonClick(contact.id)}>Chọn</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>{contact.bankId ?
+                                            (banks[contact.bankId] ? banks[contact.bankId].name : 'Ngân hàng không còn được hỗ trợ')
+                                            : 'Tài khoản nội bộ'}
+                                        </td>
+                                    </tr>
+                                </React.Fragment>
                             ))}
                         </tbody>
                     </table>
