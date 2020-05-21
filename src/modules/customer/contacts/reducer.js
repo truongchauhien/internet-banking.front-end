@@ -1,47 +1,26 @@
 import _ from 'lodash';
+import { combineReducers } from 'redux';
+import { convertArrayToObject } from '../../../commons/utils/array-utils';
 import {
-    FECTH_CONTACTS_REQUEST,
-    FECTH_CONTACTS_FAILURE,
-    FECTH_CONTACTS_SUCCESS,
-    PATCH_CONTACT_REQUEST,
-    PATCH_CONTACT_FAILURE,
-    PATCH_CONTACT_SUCCESS,
-    DELETE_CONTACT_REQUEST,
-    DELETE_CONTACT_FAILURE,
-    DELETE_CONTACT_SUCCESS,
+    FECTH_CONTACTS_SUCCESS
+} from './actions';
+import {
     CREATE_CONTACT_REQUEST,
     CREATE_CONTACT_FAILURE,
-    CREATE_CONTACT_SUCCESS,
-    CONTACT_CREATION_INPUT_CHANGE,
-    CONTACT_CREATION_MODAL_OPEN_STATUS_CHANGE,
-    CONTACT_MODIFICATION_INPUT_CHANGE,
-    CONTACT_MODIFICATION_MODAL_OPEN_STATUS_CHANGE,
-    CONTACT_MODIFICATION_INIT,
-    CONTACT_CREATION_INIT
-} from './actions';
-import { convertArrayToObject } from '../../../commons/utils/array-utils';
-import { combineReducers } from 'redux';
+    CREATE_CONTACT_SUCCESS
+} from './creation/actions'
+import {
+    DELETE_CONTACT_SUCCESS,
+} from './deletion/actions'
+import {
+    PATCH_CONTACT_SUCCESS,
+} from './modification/actions';
+import contactCreationReducer from './creation/reducer';
+import contactModificationReducer from './modification/reducer';
 
 const initState = {
     byId: {},
-    allIds: [],
-    contactCreation: {
-        fields: {
-            name: '',
-            accountNumber: '',
-            bankId: ''
-        },
-        isModalOpen: false
-    },
-    contactModification: {
-        fields: {
-            id: null,
-            name: '',
-            accountNumber: '',
-            bankId: ''
-        },
-        isModalOpen: false
-    }
+    allIds: []    
 };
 
 const byIdReducer = (state = initState.byId, action) => {
@@ -100,72 +79,6 @@ const allIdsReducer = (state = initState.allIds, action) => {
             return state;
     }
 };
-
-const contactCreationFields = ['name', 'accountNumber', 'bankId'];
-const contactCreationFieldsReducer = (state = initState.contactCreation.fields, action) => {
-    switch (action.type) {
-        case CONTACT_CREATION_INPUT_CHANGE:
-            if (!contactCreationFields.includes(action.payload.field)) {
-                return state;
-            }
-            return Object.assign({}, state, {
-                [action.payload.field]: action.payload.value
-            });
-        case CONTACT_CREATION_INIT:
-            return _.merge({}, state, {
-                name: '',
-                accountNumber: '',
-                bankId: ''
-            });
-        default:
-            return state;
-    }
-}
-
-const contactCreationModalOpenStatusReducer = (state = initState.contactCreation.isModalOpen, action) => {
-    switch (action.type) {
-        case CONTACT_CREATION_MODAL_OPEN_STATUS_CHANGE:
-            return action.payload;
-        default:
-            return state;
-    }
-};
-
-const contactModificationFields = ['name', 'accountNumber', 'bankId'];
-const contactModificationFieldsReducer = (state = initState.contactModification.fields, action) => {
-    switch (action.type) {
-        case CONTACT_MODIFICATION_INIT:
-            return action.payload;
-        case CONTACT_MODIFICATION_INPUT_CHANGE:
-            if (!contactModificationFields.includes(action.payload.field)) {
-                return state;
-            }
-            return Object.assign({}, state, {
-                [action.payload.field]: action.payload.value
-            });
-        default:
-            return state;
-    }
-};
-
-const contactModificationModalOpenStatusReducer = (state = initState.contactModification.isModalOpen, action) => {
-    switch (action.type) {
-        case CONTACT_MODIFICATION_MODAL_OPEN_STATUS_CHANGE:
-            return action.payload;
-        default:
-            return state;
-    }
-};
-
-const contactCreationReducer = combineReducers({
-    fields: contactCreationFieldsReducer,
-    isModalOpen: contactCreationModalOpenStatusReducer
-});
-
-const contactModificationReducer = combineReducers({
-    fields: contactModificationFieldsReducer,
-    isModalOpen: contactModificationModalOpenStatusReducer
-});
 
 export const contactsReducer = combineReducers({
     byId: byIdReducer,

@@ -1,14 +1,14 @@
 import React, { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
-import Select from '../../../commons/components/select/select';
-import Modal from '../../../commons/components/modal/modal';
-import styles from './contact-creation-modal.scss';
+import Select from '../../../../commons/components/select/select';
+import Modal from '../../../../commons/components/modal/modal';
 import {
     contactCreationInit,
     contactCreationInputChange,
     contactCreationModalOpenStatusChange
 } from './actions';
+import styles from './contact-creation-modal.scss';
 
 export const ContactCreationModal = ({ onSubmit }) => {
     const dispatch = useDispatch();

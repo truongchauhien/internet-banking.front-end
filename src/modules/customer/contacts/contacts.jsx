@@ -1,15 +1,19 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
-import { thunkedFetchContacts, thunkedDeleteContact, thunkedPatchContact, thunkedCreateContact } from './thunks';
-import { thunkedFetchBanks } from '../../commons/modules/banks/thunks';
+import { thunkedFetchContacts } from './thunks';
+import { thunkedCreateContact } from './creation/thunks';
+import { thunkedPatchContact } from './modification/thunks';
+import { thunkedDeleteContact } from './deletion/thunks';
 import {
-    contactCreationModalOpenStatusChange,
+    contactCreationModalOpenStatusChange
+} from './creation/actions';
+import {
     contactModificationInit,
     contactModificationModalOpenStatusChange
-} from './actions';
-import ContactCreationModal from './contact-creation-modal';
-import ContactModificationModal from './contact-modification-modal';
+} from './modification/actions';
+import ContactCreationModal from './creation/contact-creation-modal';
+import ContactModificationModal from './modification/contact-modification-modal';
 import styles from './contacts.scss';
 
 export const Contacts = (props) => {
@@ -18,11 +22,7 @@ export const Contacts = (props) => {
     const { byId: banks } = useSelector(state => state.commons.banks);
 
     useEffect(() => {
-        (async () => {
-            // Workaround: fetch sequentially.
-            await dispatch(thunkedFetchBanks());
-            await dispatch(thunkedFetchContacts());
-        })();
+        dispatch(thunkedFetchContacts());
     }, []);
 
     const handleShowContactCreationModalButtonClick = () => {
