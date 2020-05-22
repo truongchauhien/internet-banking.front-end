@@ -17,6 +17,17 @@ export const createCustomerPasswordChange = ({ customerId, ...body }) => request
 /**
  * 
  * @param {object} payload
+ * @param {object} payload.customerId
+ */
+export const fetchCustomer = (payload) => request({
+    resource: `/api/customers/${payload.customerId}`,
+    method: 'GET',
+    useAccessToken: true
+});
+
+/**
+ * 
+ * @param {object} payload
  * @param {object} payload.userName
  * @param {object} payload.password
  * @param {object} payload.fullName
