@@ -1,5 +1,5 @@
 import { createPasswordChangeRequest, createPasswordChangeFailure, createPasswordChangeSuccess } from "./actions";
-import { createCustomerPasswordChange } from "../../../../commons/apis/customers-api";
+import { updateCustomerPassword } from "../../../../commons/apis/customers-api";
 
 /**
  * 
@@ -11,7 +11,7 @@ import { createCustomerPasswordChange } from "../../../../commons/apis/customers
 export const thunkedCreatePasswordChange = (payload) => async (dispatch, getState) => {
     dispatch(createPasswordChangeRequest())
     try {
-        const response = await createCustomerPasswordChange(payload);
+        const response = await updateCustomerPassword(payload);
         if (!response.ok) return dispatch(createPasswordChangeFailure());
         return dispatch(createPasswordChangeSuccess());
     } catch {

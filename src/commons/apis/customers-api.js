@@ -7,9 +7,9 @@ import request from "./commons/api-request";
  * @param {string} payload.oldPassword
  * @param {string} payload.newPassword
  */
-export const createCustomerPasswordChange = ({ customerId, ...body }) => request({
+export const updateCustomerPassword = ({ customerId, ...body }) => request({
     resource: `/api/customers/${customerId}/password`,
-    method: 'POST',
+    method: 'PUT',
     body: body,
     useAccessToken: true
 });
