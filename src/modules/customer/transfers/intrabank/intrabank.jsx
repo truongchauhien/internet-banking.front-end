@@ -6,9 +6,10 @@ import AccountSelector from '../../commons/account-selector/account-selector';
 import { thunkedCreateIntrabankTransfer, thunkedConfirmIntrabankTransfer } from './thunks';
 import { clearIntrabankTransfer } from './actions';
 import ContactSelectionModal from '../../commons/contact-selection-modal/contact-selection-modal';
+import { vndFormatter } from '../../../../commons/utils/number-format-utils.js';
 import styles from './intrabank.scss';
 
-const IntraBank = (props) => {
+const Intrabank = (props) => {
     const dispatch = useDispatch();
 
     const { byId: accounts, allIds: accountIds } = useSelector(state => state.customer.accounts);
@@ -103,7 +104,7 @@ const IntraBank = (props) => {
                         {
                             accounts[selectedAccountId] &&
                             <div>
-                                {<label>Số dư: {accounts[selectedAccountId].balance}</label>}
+                                {<label>Số dư: {vndFormatter.format(accounts[selectedAccountId].balance)}</label>}
                             </div>
                         }
                     </fieldset>
@@ -116,7 +117,7 @@ const IntraBank = (props) => {
                             isOpen={isContactSelectionModalOpen}
                             onClickOutside={handleContactSelectionModalClickOutside}
                             onContactSelect={handleContactSelectionModalSelectContact}
-                            internalContactOnly={true}
+                            types={['internal']}
                         />
                     </fieldset>
                     <fieldset>
@@ -194,4 +195,4 @@ const IntraBank = (props) => {
     );
 };
 
-export default IntraBank;
+export default Intrabank;
