@@ -1,59 +1,79 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Accordion from '../../../commons/components/accordion/accordion';
-import { thunkedFetchAccounts } from './thunks';
+import { closureRequestModalOpenStatusChange, accountClosureRequestInitialize } from './closure-request/actions';
+import { AccountClosureRequestModal } from './closure-request/closure-request-modal';
+import { vndFormatter } from '../../../commons/utils/number-format-utils.js';
 import styles from './accounts.scss';
 
 export const Accounts = () => {
     const dispatch = useDispatch();
 
-    const [accordionActiveIndex, setAccordionActiveIndex] = useState(-1);
-    
-    const accountAllIds = useSelector(state => state.customer.accounts.allIds);
-    const accountById = useSelector(state => state.customer.accounts.byId);
-    const customerId = useSelector(state => state.authentication.userData.userId);
+    const [accordionActiveIndex, setAccordionActiveIndex] = useState('');
+
+    const { byId: accounts, allIds: accountIds, defaultCurrentAccountId } = useSelector(state => state.customer.accounts);
+
+    const accountsByType = useMemo(() => {
+        const byType = {
+            current: [],
+            deposit: []
+        };
+        for (const id of accountIds) {
+            const account = accounts[id];
+            switch (account.type) {
+                case 'CURRENT':
+                    byType.current.push(account);
+                    break;
+                case 'DEPOSIT':
+                    byType.deposit.push(account);
+                    break;
+            }
+        }
+        return byType;
+    }, [accounts]);
 
     useEffect(() => {
-        dispatch(thunkedFetchAccounts({
-            customerId
-        }));
+
     }, []);
 
-    const handleAccordionTitleClick = (e, { index }) => {
+    const handleAccordionTitleClick = (index) => {
         setAccordionActiveIndex(index);
+    };
+
+    const handleCloseAccountButton = (closedAccountId) => {
+        dispatch(accountClosureRequestInitialize({
+            closedAccountId: closedAccountId
+        }));
+        dispatch(closureRequestModalOpenStatusChange(true));
     };
 
     return (
         <div>
             <Accordion>
-                {accountAllIds && accountAllIds.map((accountId, index) => {
-                    const account = accountById[accountId];
-
-                    if (account.accountType === 'CURRENT') {
-                        return (
-                            <React.Fragment key={account.accountNumber}>
-                                <Accordion.Title onClick={handleAccordionTitleClick} index={index}>
-                                    Tài khoản thanh toán: {account.accountNumber}
-                                </Accordion.Title>
-                                <Accordion.Content active={accordionActiveIndex === index}>
-                                    <p>Số dư: {account.balance}</p>
-                                </Accordion.Content>
-                            </React.Fragment>
-                        );
-                    } else if (account.accountType === 'DEPOSIT') {
-                        return (
-                            <React.Fragment key={account.accountNumber}>
-                                <Accordion.Title onClick={handleAccordionTitleClick} index={index}>
-                                    Tài khoản tiết kiệm: {account.accountNumber}
-                                </Accordion.Title>
-                                <Accordion.Content active={accordionActiveIndex === index}>
-                                    <p>Số dư: {account.balance}</p>
-                                </Accordion.Content>
-                            </React.Fragment>
-                        );
-                    }
-                })}
+                {accountsByType.current.map((account) => (
+                    <React.Fragment key={account.accountNumber}>
+                        <Accordion.Title onClick={handleAccordionTitleClick} index={account.id}>
+                            Tài khoản thanh toán: {account.accountNumber}{defaultCurrentAccountId === account.id && ' (mặc định)'}
+                        </Accordion.Title>
+                        <Accordion.Content active={accordionActiveIndex === account.id}>
+                            <p>Số dư: {vndFormatter.format(account.balance)}</p>
+                            <button onClick={() => handleCloseAccountButton(account.id)}>Đóng tài khoản ...</button>
+                        </Accordion.Content>
+                    </React.Fragment>
+                ))}
+                {accountsByType.deposit.map((account) => (
+                    <React.Fragment key={account.accountNumber}>
+                        <Accordion.Title onClick={handleAccordionTitleClick} index={account.id}>
+                            Tài khoản tiết kiệm: {account.accountNumber}
+                        </Accordion.Title>
+                        <Accordion.Content active={accordionActiveIndex === account.id}>
+                            <p>Số dư: {vndFormatter.format(account.balance)}</p>
+                            <button onClick={() => handleCloseAccountButton(account.id)}>Đóng tài khoản ...</button>
+                        </Accordion.Content>
+                    </React.Fragment>
+                ))}
             </Accordion>
+            <AccountClosureRequestModal />
         </div>
     )
 };

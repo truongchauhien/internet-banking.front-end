@@ -1,14 +1,17 @@
+import { combineReducers } from 'redux';
+import { convertArrayToObject } from '../../../commons/utils/array-utils';
 import {
     FECTH_ACCOUNTS_REQUEST,
     FETCH_ACCOUNTS_SUCCESS,
     FETCH_ACCOUNTS_FAILURE
 } from './actions';
-import { combineReducers } from 'redux';
-import { convertArrayToObject } from '../../../commons/utils/array-utils';
+import { FETCH_CUSTOMER_SUCCESS } from '../actions';
+import closureRequestReducer from './closure-request/reducer';
 
 const initState = {
     byId: {},
-    allIds: []
+    allIds: [],
+    defaultCurrentAccountId: -1
 };
 
 const byIdReducer = (state = initState.byId, action) => {
@@ -29,9 +32,20 @@ const allIdsReducer = (state = initState.allIds, action) => {
     }
 };
 
+const defaultCurrentAccountIdReducer = (state = -1, action) => {
+    switch (action.type) {
+        case FETCH_CUSTOMER_SUCCESS:
+            return action.payload.customer.defaultCurrentAccountId;
+        default:
+            return state;
+    }
+};
+
 export const accountsReducer = combineReducers({
     byId: byIdReducer,
-    allIds: allIdsReducer
+    allIds: allIdsReducer,
+    defaultCurrentAccountId: defaultCurrentAccountIdReducer,
+    closureRequest: closureRequestReducer
 });
 
 export default accountsReducer;
