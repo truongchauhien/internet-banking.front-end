@@ -26,3 +26,16 @@ export const fetchAccount = ({ identityValue, identityType }) => request({
     },
     useAccessToken: true
 });
+
+/**
+ * 
+ * @param {object} payload
+ * @param {object} payload.closedAccountId
+ * @param {object} payload.transferredAccountId
+ */
+export const closeAccount = (payload) => request({
+    method: 'DELETE',
+    resource: `/api/accounts/${payload.closedAccountId}`,
+    body: payload,
+    useAccessToken: true
+});
