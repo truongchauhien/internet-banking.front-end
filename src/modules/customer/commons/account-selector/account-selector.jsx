@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Select from '../../../../commons/components/select/select';
-import { thunkedFetchAccounts } from '../../accounts/thunks';
 
 /**
  * 
@@ -12,17 +11,36 @@ import { thunkedFetchAccounts } from '../../accounts/thunks';
  * @param {function} payload.onAccountSelect
  * @param {['CURRENT', 'DEPOSIT']} payload.showedTypes
  */
-export const AccountSelector = ({ id, customerId, selectedAccountId = '', onAccountSelect, showedTypes = ['CURRENT', 'DEPOSIT'] }) => {
+export const AccountSelector = ({ id, selectedAccountId = '', onAccountSelect, showedTypes = ['CURRENT', 'DEPOSIT'], skippedAccountIds = [] }) => {
     const dispatch = useDispatch();
     const { byId: accounts, allIds: accountIds } = useSelector(state => state.customer.accounts);
     const accountArray = useMemo(() => accountIds.map(id => accounts[id]), [accountIds]);
-    const { userType, userId } = useSelector(state => state.authentication.userData);
+
+    const accountsByType = useMemo(() => {
+        const byType = {
+            current: [],
+            deposit: []
+        };
+
+        for (const id of accountIds) {
+            const account = accounts[id];
+            if (skippedAccountIds.includes(account.id)) {
+                continue;
+            }
+            switch (account.type) {
+                case 'CURRENT':
+                    byType.current.push(account);
+                    break;
+                case 'DEPOSIT':
+                    byType.deposit.push(account);
+                    break;
+            }
+        }
+        return byType;
+    }, [accounts, skippedAccountIds]);
 
     useEffect(() => {
-        dispatch(thunkedFetchAccounts({
-            customerId: customerId ? customerId :
-                (userType === 'customer' ? userId : null) // Automatically fetch accounts for current customer.
-        }));
+
     }, []);
 
     const handleOnChange = (selectedValue) => {
@@ -36,7 +54,7 @@ export const AccountSelector = ({ id, customerId, selectedAccountId = '', onAcco
                 <Select.Group
                     label='Tài khoản thanh toán'
                     options={
-                        accountArray && accountArray.filter(account => account.accountType === 'CURRENT').map(account => ({
+                        accountsByType.current.map(account => ({
                             value: account.id,
                             label: account.accountNumber
                         }))
@@ -49,7 +67,7 @@ export const AccountSelector = ({ id, customerId, selectedAccountId = '', onAcco
                 <Select.Group
                     label='Tài khoản tiết kiệm'
                     options={
-                        accountArray && accountArray.filter(account => account.accountType === 'DEPOSIT').map(account => ({
+                        accountsByType.deposit.map(account => ({
                             value: account.id,
                             label: account.accountNumber
                         }))
