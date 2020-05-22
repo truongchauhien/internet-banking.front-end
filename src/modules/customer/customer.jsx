@@ -1,22 +1,37 @@
 import React, { useEffect } from 'react';
 import { NavLink, useRouteMatch, Route, Switch } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
-import { SideBar, MenuItem } from '../../commons/components/sidebar/sidebar';
+import SideBar from '../../commons/components/sidebar/sidebar';
 import Accounts from './accounts/accounts';
 import Contacts from './contacts/contacts';
 import Transfers from './transfers/transfers';
 import Debts from './debts/debts';
+import TransactionHistory from './transaction-history/transaction-history';
 import TopNavigation from './top-navigation/top-navigation';
 import Profile from './profile/profile';
-import TransactionHistory from './transaction-history/transaction-history';
+import { thunkedFetchBanks } from '../commons/modules/banks/thunks';
 import styles from './customer.scss';
+import { useDispatch, useSelector } from 'react-redux';
+import { thunkedFetchAccounts } from './accounts/thunks';
+import { thunkedFetchCustomer } from './thunks';
 
 export function Customer(props) {
-    const match = useRouteMatch();
+    const dispatch = useDispatch();
+    const customerId = useSelector(state => state.authentication.userData.userId);
 
     useEffect(() => {
         document.title = 'Internet Banking: Xin chào';
+        (async () => {
+            await dispatch(thunkedFetchBanks());
+            await dispatch(thunkedFetchAccounts({
+                customerId
+            }));
+            await dispatch(thunkedFetchCustomer({
+                customerId
+            }));
+        })();
     }, []);
+
+    const match = useRouteMatch();
 
     return (
         <React.Fragment>
