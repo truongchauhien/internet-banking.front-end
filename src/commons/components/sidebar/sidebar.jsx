@@ -4,7 +4,7 @@ import styles from './sidebar.scss';
 
 export const SideBar = (props) => {
     return (
-        <div>
+        <div className={styles.container}>
             {props.children}
         </div>
     );
