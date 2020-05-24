@@ -36,9 +36,4 @@ export const confirmIntrabankTransferSuccess = payload => ({
     payload
 });
 
-export const CLEAR_INTRABANK_TRANSFER = 'CLEAR_INTRABANK_TRANSFER';
 
-export const clearIntrabankTransfer = payload => ({
-    type: CLEAR_INTRABANK_TRANSFER,
-    payload
-});

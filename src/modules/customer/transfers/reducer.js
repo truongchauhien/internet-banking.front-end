@@ -1,9 +1,9 @@
 import { combineReducers } from "redux";
-import intrabankReducer from "./intrabank/reducer";
 import payDebtReducer from "./paydebt/reducer";
+import intrabankInterbankReducer from './intrabank-interbank/reducer';
 
 export const transfersReducer = combineReducers({
-    intrabank: intrabankReducer,
+    intrabankInterbank: intrabankInterbankReducer,
     payDebt: payDebtReducer
 });
 

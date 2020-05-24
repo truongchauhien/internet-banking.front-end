@@ -4,7 +4,7 @@ import {
 } from './actions';
 import {
     createIntrabankTransfer, confirmIntrabankTransfer
-} from '../../../../commons/apis/transfer-api';
+} from '../../../../../commons/apis/transfer-api';
 
 /**
  * 
