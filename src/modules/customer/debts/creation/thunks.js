@@ -4,7 +4,7 @@ import { createDebt } from "../../../../commons/apis/debt-api";
 /**
  * 
  * @param {object} payload
- * @param {string} payload.toCustomerHasAccountNumber
+ * @param {string} payload.toAccountNumber
  * @param {number} payload.amount
  * @param {string} payload.message
  */
