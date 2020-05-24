@@ -3,21 +3,20 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter, Switch, Route, Redirect, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
-import Login from './modules/authentication/login';
-import PasswordReset from './modules/authentication/password-reset/password-reset';
+import { thunkedLoginRestore } from './modules/authentication/login-restoration/thunks';
+import Login from './modules/authentication/login/login';
 import PrivateRoute from './commons/components/permissions/private-route';
 import Customer from './modules/customer/customer';
-import { thunkedLoginRestore } from './modules/authentication/thunks';
+import Employee from './modules/employee/employee';
+import Administrator from './modules/administrator/administrator';
 import './app.scss';
-import 'react-toastify/dist/ReactToastify.css';
-
-toast.configure();
+import 'react-datepicker/dist/react-datepicker.css';
 
 const App = (props) => {
     const dispatch = useDispatch();
 
     const isAuthenticated = useSelector(state => state.authentication.isAuthenticated);
-    const isRestoring = useSelector(state => state.authentication.isRestoring);
+    const isRestoring = useSelector(state => state.authentication.loginRestoration.isRestoring);
     const { userType } = useSelector(state => state.authentication.userData);
     const switchModule = useCallback(() => {
         if (isRestoring) {
@@ -61,15 +60,14 @@ const App = (props) => {
                     </PrivateRoute>
 
                     <PrivateRoute path='/employee'>
-                        <div>Employee</div>
+                        <Employee />
                     </PrivateRoute>
 
                     <PrivateRoute path='/administrator'>
-                        <div>Administrator</div>
+                        <Administrator />
                     </PrivateRoute>
                 </Switch>
             </BrowserRouter>
-            <ToastContainer />
         </React.Fragment>
     );
 };

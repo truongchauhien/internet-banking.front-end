@@ -12,9 +12,9 @@ import request from "./commons/api-request";
 export const createIntrabankTransfer = (payload) => request({
     method: 'POST',
     resource: '/api/transfers',
-    body: payload,
-    params: {
-        type: 'intrabank'
+    body: {
+        type: 'intrabank',
+        ...payload
     },
     useAccessToken: true
 });
@@ -28,9 +28,9 @@ export const createIntrabankTransfer = (payload) => request({
 export const confirmIntrabankTransfer = ({ transferId, ...payload }) => request({
     method: 'POST',
     resource: `/api/transfers/${transferId}`,
-    body: payload,
-    params: {
-        type: 'intrabank'
+    body: {
+        type: 'intrabank',
+        ...payload
     },
     useAccessToken: true
 });
@@ -48,10 +48,11 @@ export const confirmIntrabankTransfer = ({ transferId, ...payload }) => request(
 export const createInterbankTransfer = (payload) => request({
     method: 'POST',
     resource: '/api/transfers',
-    params: {
-        type: 'interbank'
+    body: {
+        type: 'interbank',
+        ...payload
     },
-    body: payload
+    useAccessToken: true
 });
 
 /**
@@ -63,9 +64,9 @@ export const createInterbankTransfer = (payload) => request({
 export const confirmInterbankTransfer = ({ transferId, ...payload }) => request({
     method: 'POST',
     resource: `/api/transfers/${transferId}`,
-    body: payload,
-    params: {
-        type: 'interbank'
+    body: {
+        type: 'interbank',
+        ...payload
     },
     useAccessToken: true
 });
@@ -78,9 +79,9 @@ export const confirmInterbankTransfer = ({ transferId, ...payload }) => request(
 export const createPayDebtTransfer = (payload) => request({
     method: 'POST',
     resource: '/api/transfers',
-    body: payload,
-    params: {
-        type: 'paydebt'
+    body: {
+        type: 'paydebt',
+        ...payload
     },
     useAccessToken: true
 });
@@ -94,9 +95,9 @@ export const createPayDebtTransfer = (payload) => request({
 export const confirmPayDebtTransfer = ({ transferId, ...payload }) => request({
     method: 'POST',
     resource: `/api/transfers/${transferId}`,
-    body: payload,
-    params: {
-        type: 'paydebt'
+    body: {
+        type: 'paydebt',
+        ...payload
     },
     useAccessToken: true
 });

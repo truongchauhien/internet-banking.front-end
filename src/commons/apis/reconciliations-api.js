@@ -15,7 +15,7 @@ export const fetchReconciliations = (payload) => request({
  * @param {object} payload
  * @param {Date} payload.fromTime
  * @param {Date} payload.toTime
- * @param {?number} payload.bankId
+ * @param {?number} payload.withBankId
  */
 export const createReconciliation = (payload) => request({
     method: 'POST',
