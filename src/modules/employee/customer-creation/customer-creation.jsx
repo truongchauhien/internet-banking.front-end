@@ -6,9 +6,8 @@ import { thunkedCreateCustomer } from './thunks';
 
 export const CustomerCreation = (props) => {
     const dispatch = useDispatch();
-    const inputs = useSelector(state => state.employee.customerCreation.inputs);
-    const isCreating = useSelector(state => state.employee.customerCreation.isCreating);
-    const createdCustomer = useSelector(state => state.employee.customerCreation.createdCustomer);
+
+    const { inputs, isCreating, createdCustomer, createdCurrentAccount } = useSelector(state => state.employee.customerCreation);
 
     const handleSubmitButtonClick = () => {
         dispatch(thunkedCreateCustomer(inputs));
@@ -46,6 +45,8 @@ export const CustomerCreation = (props) => {
         return (
             <div>
                 <p>Tài khoản khách hàng đã được đăng ký thành công.</p>
+                <label>Số tài khoản:</label><br />
+                <label>{createdCurrentAccount.accountNumber}</label><br />
                 <button onClick={handleContinueButtonClick}>Tiếp tục ...</button>
             </div>
         );

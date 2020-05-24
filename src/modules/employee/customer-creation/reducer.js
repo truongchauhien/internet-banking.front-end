@@ -14,6 +14,7 @@ const initState = {
         phone: ''
     },
     createdCustomer: null,
+    createdCurrentAccount: null,
     isCreating: false
 };
 
@@ -28,12 +29,23 @@ const inputsReducer = (state = initState.inputs, action) => {
     }
 };
 
-const createdCustomer = (state = initState.createdCustomer, action) => {
+const createdCustomerReducer = (state = initState.createdCustomer, action) => {
     switch (action.type) {
         case CREATE_CUSTOMER_SUCCESS:
-            return action.payload;
+            return action.payload.customer;
         case CUSTOMER_CREATION_RESET:
-            return null;
+            return initState.createdCustomer;
+        default:
+            return state;
+    }
+};
+
+const createdCurrentAccountReducer= (state = initState.createdCurrentAccount, action) => {
+    switch (action.type) {
+        case CREATE_CUSTOMER_SUCCESS:
+            return action.payload.currentAccount;
+        case CUSTOMER_CREATION_RESET:
+            return initState.createdCurrentAccount;
         default:
             return state;
     }
@@ -54,7 +66,8 @@ const isCreatingReducer = (state = initState.isCreating, action) => {
 
 export const customerCreationReducer = combineReducers({
     inputs: inputsReducer,
-    createdCustomer: createdCustomer,
+    createdCustomer: createdCustomerReducer,
+    createdCurrentAccount: createdCurrentAccountReducer,
     isCreating: isCreatingReducer
 });
 

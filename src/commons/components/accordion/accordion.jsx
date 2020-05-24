@@ -8,7 +8,7 @@ export const Accordion = (props) => {
 Accordion.Title = ({ active, index, onClick, ...props }) => {
     const handleClick = (e) => {
         e.preventDefault();
-        onClick(e, { index });
+        onClick && onClick(index);
     };
 
     return (

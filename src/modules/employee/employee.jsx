@@ -6,6 +6,7 @@ import CustomerCreation from './customer-creation/customer-creation';
 import DepositCreation from './deposit-creation/deposit-creation';
 import styles from './employee.scss';
 import TransactionHistory from './transaction-history/transaction-history';
+import CustomerAccounts from './customer-accounts/customer-accounts';
 
 export const Employee = (props) => {
     const match = useRouteMatch();
@@ -17,7 +18,12 @@ export const Employee = (props) => {
                 <SideBar.Menu>
                     <SideBar.Menu.Item>
                         <NavLink to={`${match.url}/customer-creation`} activeClassName={styles.activeSidebarMenuItem}>
-                            Tạo tài khoản khách hàng
+                            Tạo tài khoản người dùng
+                        </NavLink>
+                    </SideBar.Menu.Item>
+                    <SideBar.Menu.Item>
+                        <NavLink to={`${match.url}/customer-accounts`} activeClassName={styles.activeSidebarMenuItem}>
+                            Tài khoản ngân hàng
                         </NavLink>
                     </SideBar.Menu.Item>
                     <SideBar.Menu.Item>
@@ -35,6 +41,9 @@ export const Employee = (props) => {
                     <Switch>
                         <Route path={`${match.path}/customer-creation`}>
                             <CustomerCreation />
+                        </Route>
+                        <Route path={`${match.path}/customer-accounts`}>
+                            <CustomerAccounts />
                         </Route>
                         <Route path={`${match.path}/deposit`}>
                             <DepositCreation />

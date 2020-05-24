@@ -17,11 +17,15 @@ export const updateCustomerPassword = ({ customerId, ...body }) => request({
 /**
  * 
  * @param {object} payload
- * @param {object} payload.customerId
+ * @param {number} payload.identity
+ * @param {'id'|'userName'} payload.identityType
  */
 export const fetchCustomer = (payload) => request({
-    resource: `/api/customers/${payload.customerId}`,
+    resource: `/api/customers/${payload.identity}`,
     method: 'GET',
+    params: {
+        identityType: payload.identityType
+    },
     useAccessToken: true
 });
 
@@ -37,6 +41,19 @@ export const fetchCustomer = (payload) => request({
 export const createCustomer = (payload) => request({
     resource: '/api/customers',
     method: 'POST',
+    body: payload,
+    useAccessToken: true
+});
+
+/**
+ * 
+ * @param {object} payload
+ * @param {number} payload.customerId
+ * @param {object} payload.currentAccountId
+ */
+export const setDefaultCurrentAccount = (payload) => request({
+    resource: `/api/customers/${payload.customerId}/defaultCurrentAccount`,
+    method: 'PUT',
     body: payload,
     useAccessToken: true
 });

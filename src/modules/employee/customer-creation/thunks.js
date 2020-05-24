@@ -15,7 +15,7 @@ export const thunkedCreateCustomer = (payload) => async (dispatch, getState) => 
     try {
         const response = await createCustomer(payload);
         if (!response.ok) return dispatch(createCustomerFailure());
-        return dispatch(createCustomerSuccess(response.body.customer));
+        return dispatch(createCustomerSuccess(response.body));
     } catch {
         return dispatch(createCustomerFailure());
     }
