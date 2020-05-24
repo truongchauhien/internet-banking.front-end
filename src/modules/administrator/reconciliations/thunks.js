@@ -41,7 +41,7 @@ export const thunkedDeleteReconciliation = (payload) => async (dispatch, getStat
  * @param {object} payload
  * @param {Date} payload.fromTime
  * @param {Date} payload.toTime
- * @param {?number} payload.bankId
+ * @param {?number} payload.withBankId
  */
 export const thunkedCreateReconciliation = (payload) => async (dispatch, getState) => {
     dispatch(createReconciliationRequest());
