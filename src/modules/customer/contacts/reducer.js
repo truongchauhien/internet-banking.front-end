@@ -17,6 +17,7 @@ import {
 } from './modification/actions';
 import contactCreationReducer from './creation/reducer';
 import contactModificationReducer from './modification/reducer';
+import queryReducer from './query/reducer';
 
 const initState = {
     byId: {},
@@ -84,7 +85,8 @@ export const contactsReducer = combineReducers({
     byId: byIdReducer,
     allIds: allIdsReducer,
     contactCreation: contactCreationReducer,
-    contactModification: contactModificationReducer
+    contactModification: contactModificationReducer,
+    query: queryReducer
 });
 
 export default contactsReducer;
