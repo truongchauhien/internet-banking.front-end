@@ -3,7 +3,8 @@ import request from "./commons/api-request";
 /**
  * 
  * @param {object} payload
- * @param {number} payload.customerId
+ * @param {?number} payload.customerId
+ * @param {?string} payload.customerUserName this parameter is only used for employee only.
  */
 export const fetchAccounts = (payload) => request({
     method: 'GET',
@@ -17,12 +18,14 @@ export const fetchAccounts = (payload) => request({
  * @param {object} payload
  * @param {number|string} payload.identityValue
  * @param {'id'|'accountNumber'} payload.identityType
+ * @param {?number} payload.bankId
  */
-export const fetchAccount = ({ identityValue, identityType }) => request({
+export const fetchAccount = (payload) => request({
     method: 'GET',
-    resource: `/api/accounts/${identityValue}`,
+    resource: `/api/accounts/${payload.identityValue}`,
     params: {
-        identityType
+        identityType: payload.identityType,
+        bankId: payload.bankId 
     },
     useAccessToken: true
 });
@@ -36,6 +39,19 @@ export const fetchAccount = ({ identityValue, identityType }) => request({
 export const closeAccount = (payload) => request({
     method: 'DELETE',
     resource: `/api/accounts/${payload.closedAccountId}`,
+    body: payload,
+    useAccessToken: true
+});
+
+/**
+ * 
+ * @param {object} payload
+ * @param {number} payload.customerId
+ * @param {'current'|'deposit'} payload.type
+ */
+export const createAccount = (payload) => request({
+    resource: '/api/accounts',
+    method: 'POST',
     body: payload,
     useAccessToken: true
 });
