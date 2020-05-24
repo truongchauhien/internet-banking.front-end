@@ -15,7 +15,9 @@ const TRANSACTIONS_TYPES_DISPLAY = {
     INTERBANK_TRANSFER_FEE: 'Phí chuyển khoản liên ngân hàng',
     DEPOSIT: 'Nạp tiền',
     PAY_DEBT_TRANSFER: 'Thanh toán nhắc nợ',
-    PAY_DEBT_RECEIVE: 'Nhận tiền trả nợ'
+    PAY_DEBT_RECEIVE: 'Nhận tiền trả nợ',
+    CLOSE_ACCOUNT_TRANSFER: 'Chuyển số dư khi đóng tài khoản.',
+    CLOSE_ACCOUNT_RECEIVE: 'Nhận số dư từ tài khoản bị đóng.'
 };
 
 export const TransactionHistory = (props) => {
