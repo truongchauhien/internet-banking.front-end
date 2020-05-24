@@ -1,6 +1,5 @@
 import React, { useMemo, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { thunkedFetchBanks } from '../../commons/modules/banks/thunks';
 import Select from '../../../commons/components/select/select';
 import DatePicker from 'react-datepicker';
 import styles from './reconciliations.scss';
@@ -11,29 +10,26 @@ const API_SERVER_URL = `${USE_HTTPS ? 'https' : 'http'}://${API_HOST}:${API_PORT
 
 export const Reconciliations = (props) => {
     const dispatch = useDispatch();
-    const [bankId, setBankId] = useState('');
+    const [withBankId, setWithBankId] = useState('*');
     const [fromTime, setFromTime] = useState(new Date());
     const [toTime, setToTime] = useState(new Date());
 
-    const { byId: banks, allIds: bankIds } = useSelector(state => state.commons.banks);
+    const { byId: banks, allIds: bankIds } = useSelector(state => state.entities.banks);
     const bankOptions = useMemo(() => {
         const originalOptions = bankIds
             .map(id => banks[id])
             .map(bank => ({ label: bank.name, value: bank.id }));
 
-        return [{ value: '', label: 'Tất cả' }, ...originalOptions];
+        return [{ value: '*', label: 'Tất cả' }, ...originalOptions];
     }, [banks]);
     const { byId: reconciliations, allIds: reconciliationIds, isFetching } = useSelector(state => state.administrator.reconciliations);
 
     useEffect(() => {
-        (async () => {
-            await dispatch(thunkedFetchBanks());
-            await dispatch(thunkedFetchReconciliations());
-        })();
+        dispatch(thunkedFetchReconciliations());
     }, []);
 
     const handleBankSelectChange = (bankId) => {
-        setBankId(bankId);
+        setWithBankId(bankId);
     };
 
     const handleFromTimeDatePickerSelect = (time) => {
@@ -46,7 +42,7 @@ export const Reconciliations = (props) => {
 
     const handleCreateReconciliationButtonClick = () => {
         dispatch(thunkedCreateReconciliation({
-            bankId: bankId === '' ? null : bankId,
+            withBankId: withBankId === '*' ? null : withBankId,
             fromTime: fromTime,
             toTime: toTime
         }));
@@ -62,7 +58,7 @@ export const Reconciliations = (props) => {
         <div>
             <div className={styles.searchCriteria}>
                 <label>Chọn ngân hàng:</label>
-                <Select options={bankOptions} value={bankId} onChange={handleBankSelectChange} />
+                <Select options={bankOptions} value={withBankId} onChange={handleBankSelectChange} />
                 <label>Thời gian bắt đầu:</label>
                 <DatePicker
                     className={styles.datePicker}
@@ -102,7 +98,7 @@ export const Reconciliations = (props) => {
                                 <tr key={id}>
                                     <td>{vnDateTimeFormatter.format(new Date(reconciliation.fromTime))}</td>
                                     <td>{vnDateTimeFormatter.format(new Date(reconciliation.toTime))}</td>
-                                    <td>{reconciliation.bankId === null ? 'Tất cả' : banks[reconciliation.bankId].name}</td>
+                                    <td>{reconciliation.withBankId === null ? 'Tất cả' : banks[reconciliation.withBankId] && banks[reconciliation.withBankId].name}</td>
                                     <td>{reconciliation.isGenerating ? 'Đang xử lí...' :
                                         <a href={`${API_SERVER_URL}/reconciliations/${id}`} target='_blank'>Nhấn để tải về</a>}
                                     </td>

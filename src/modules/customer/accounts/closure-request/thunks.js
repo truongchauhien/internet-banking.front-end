@@ -1,10 +1,10 @@
 import {
     closeAccountRequest, closeAccountFailure, closeAccountSuccess,
     closureRequestModalOpenStatusChange
-} from "./actions";
-import { closeAccount } from "../../../../commons/apis/accounts-api";
-import { thunkedFetchAccounts } from "../thunks";
-import { thunkedFetchCustomer } from '../../thunks';
+} from './actions';
+import { closeAccount } from '../../../../commons/apis/accounts-api';
+import { thunkedFetchAccounts } from '../../../commons/entities/accounts/thunks';
+import { thunkedFetchCustomer } from '../../../commons/entities/customers/thunks';
 
 /**
  * 

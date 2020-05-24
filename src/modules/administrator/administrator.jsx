@@ -1,12 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import TopNavigation from './top-navigation/top-navigation';
 import { NavLink, useRouteMatch, Switch, Route } from 'react-router-dom';
 import SideBar from '../../commons/components/sidebar/sidebar';
 import Employees from './employees/employees';
 import Reconciliations from './reconciliations/reconciliations';
 import styles from './administrator.scss';
+import { useDispatch } from 'react-redux';
+import { thunkedFetchBanks } from '../commons/entities/banks/thunks';
 
 export const Administrator = (props) => {
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(thunkedFetchBanks());
+    }, []);
+
     const match = useRouteMatch();
 
     return (

@@ -4,6 +4,8 @@ import Accordion from '../../../commons/components/accordion/accordion';
 import { closureRequestModalOpenStatusChange, accountClosureRequestInitialize } from './closure-request/actions';
 import { AccountClosureRequestModal } from './closure-request/closure-request-modal';
 import { vndFormatter } from '../../../commons/utils/number-format-utils.js';
+import { thunkedSetDefaultCurrentAccount } from './default-current-account/thunks';
+import ACCOUNT_TYPES from '../../../commons/constants/account-types';
 import styles from './accounts.scss';
 
 export const Accounts = () => {
@@ -11,7 +13,9 @@ export const Accounts = () => {
 
     const [accordionActiveIndex, setAccordionActiveIndex] = useState('');
 
-    const { byId: accounts, allIds: accountIds, defaultCurrentAccountId } = useSelector(state => state.customer.accounts);
+    const { userId: customerId } = useSelector(state => state.authentication.userData);
+    const { byId: accounts, allIds: accountIds } = useSelector(state => state.entities.accounts);
+    const { defaultCurrentAccountId } = useSelector(state => state.customer.accounts);
 
     const accountsByType = useMemo(() => {
         const byType = {
@@ -20,11 +24,11 @@ export const Accounts = () => {
         };
         for (const id of accountIds) {
             const account = accounts[id];
-            switch (account.type) {
-                case 'CURRENT':
+            switch (account.typeId) {
+                case ACCOUNT_TYPES.CURRENT:
                     byType.current.push(account);
                     break;
-                case 'DEPOSIT':
+                case ACCOUNT_TYPES.DEPOSIT:
                     byType.deposit.push(account);
                     break;
             }
@@ -40,11 +44,18 @@ export const Accounts = () => {
         setAccordionActiveIndex(index);
     };
 
-    const handleCloseAccountButton = (closedAccountId) => {
+    const handleCloseAccountButtonClick = (closedAccountId) => {
         dispatch(accountClosureRequestInitialize({
             closedAccountId: closedAccountId
         }));
         dispatch(closureRequestModalOpenStatusChange(true));
+    };
+
+    const handleSetDefaultCurrentAccountButtonClick = (currentAccountId) => {
+        dispatch(thunkedSetDefaultCurrentAccount({
+            customerId: customerId,
+            currentAccountId: currentAccountId
+        }));
     };
 
     return (
@@ -57,7 +68,10 @@ export const Accounts = () => {
                         </Accordion.Title>
                         <Accordion.Content active={accordionActiveIndex === account.id}>
                             <p>Số dư: {vndFormatter.format(account.balance)}</p>
-                            <button onClick={() => handleCloseAccountButton(account.id)}>Đóng tài khoản ...</button>
+                            <button onClick={() => handleCloseAccountButtonClick(account.id)}>Đóng tài khoản ...</button>
+                            {defaultCurrentAccountId !== account.id &&
+                                <button onClick={() => handleSetDefaultCurrentAccountButtonClick(account.id)}>Đặt làm tài khoản thanh toán mặc định</button>
+                            }
                         </Accordion.Content>
                     </React.Fragment>
                 ))}
@@ -68,7 +82,7 @@ export const Accounts = () => {
                         </Accordion.Title>
                         <Accordion.Content active={accordionActiveIndex === account.id}>
                             <p>Số dư: {vndFormatter.format(account.balance)}</p>
-                            <button onClick={() => handleCloseAccountButton(account.id)}>Đóng tài khoản ...</button>
+                            <button onClick={() => handleCloseAccountButtonClick(account.id)}>Đóng tài khoản ...</button>
                         </Accordion.Content>
                     </React.Fragment>
                 ))}
