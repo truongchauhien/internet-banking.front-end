@@ -9,6 +9,7 @@ import {
     contactCreationModalOpenStatusChange
 } from './actions';
 import styles from './contact-creation-modal.scss';
+import BankSelector from '../../../commons/components/bank-selector/bank-selector';
 
 export const ContactCreationModal = ({ onSubmit }) => {
     const dispatch = useDispatch();
@@ -20,7 +21,7 @@ export const ContactCreationModal = ({ onSubmit }) => {
     } = useSelector(state => state.customer.contacts.contactCreation.fields);
     const isModalOpen = useSelector(state => state.customer.contacts.contactCreation.isModalOpen);
 
-    const { byId: banks, allIds: bankIds } = useSelector(state => state.commons.banks);
+    const { byId: banks, allIds: bankIds } = useSelector(state => state.entities.banks);
     const bankArray = useMemo(() => {
         const bankArray = bankIds
             .map(id => banks[id])
@@ -60,8 +61,8 @@ export const ContactCreationModal = ({ onSubmit }) => {
     };
 
     const handleCancelClick = () => {
-        dispatch(contactCreationInit());
         dispatch(contactCreationModalOpenStatusChange(false));
+        dispatch(contactCreationInit());
     };
 
     const handleContactCreationModalClickOutside = () => {
@@ -75,7 +76,7 @@ export const ContactCreationModal = ({ onSubmit }) => {
                     <label>Số tài khoản:</label>
                     <input value={contactAccountNumber} onChange={handleContactAccountNumberInputChange} />
                     <label>Ngân hàng:</label>
-                    <Select options={bankArray} value={contactBankId} onChange={handleBankSelectChange} />
+                    <BankSelector bankId={contactBankId} onChange={handleBankSelectChange} />
                     <label>Tên liên hệ:</label>
                     <input value={contactName} onChange={handleContactNameInputChange} />
                     <button onClick={handleCancelClick}>Hủy</button>

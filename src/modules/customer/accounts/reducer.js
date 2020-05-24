@@ -1,49 +1,33 @@
 import { combineReducers } from 'redux';
-import { convertArrayToObject } from '../../../commons/utils/array-utils';
-import {
-    FECTH_ACCOUNTS_REQUEST,
-    FETCH_ACCOUNTS_SUCCESS,
-    FETCH_ACCOUNTS_FAILURE
-} from './actions';
-import { FETCH_CUSTOMER_SUCCESS } from '../actions';
+import { FETCH_CUSTOMER_SUCCESS } from '../../commons/entities/customers/actions';
+import { SET_DEFAULT_CURRENT_ACCOUNT_SUCCESS } from './default-current-account/actions';
 import closureRequestReducer from './closure-request/reducer';
 
 const initState = {
-    byId: {},
-    allIds: [],
+    isFetching: false,
     defaultCurrentAccountId: -1
 };
 
-const byIdReducer = (state = initState.byId, action) => {
+const isFetchingReducer = (state = initState.isFetching, action) => {
     switch (action.type) {
-        case FETCH_ACCOUNTS_SUCCESS:
-            return convertArrayToObject(action.payload, 'id');
         default:
             return state;
     }
 };
 
-const allIdsReducer = (state = initState.allIds, action) => {
-    switch (action.type) {
-        case FETCH_ACCOUNTS_SUCCESS:
-            return action.payload.map(item => item.id);
-        default:
-            return state;
-    }
-};
-
-const defaultCurrentAccountIdReducer = (state = -1, action) => {
+const defaultCurrentAccountIdReducer = (state = initState.defaultCurrentAccountId, action) => {
     switch (action.type) {
         case FETCH_CUSTOMER_SUCCESS:
             return action.payload.customer.defaultCurrentAccountId;
+        case SET_DEFAULT_CURRENT_ACCOUNT_SUCCESS:
+            return action.payload.defaultCurrentAccountId;
         default:
             return state;
     }
 };
 
 export const accountsReducer = combineReducers({
-    byId: byIdReducer,
-    allIds: allIdsReducer,
+    isFetching: isFetchingReducer,
     defaultCurrentAccountId: defaultCurrentAccountIdReducer,
     closureRequest: closureRequestReducer
 });

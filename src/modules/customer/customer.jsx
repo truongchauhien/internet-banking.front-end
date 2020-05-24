@@ -8,11 +8,11 @@ import Debts from './debts/debts';
 import TransactionHistory from './transaction-history/transaction-history';
 import TopNavigation from './top-navigation/top-navigation';
 import Profile from './profile/profile';
-import { thunkedFetchBanks } from '../commons/modules/banks/thunks';
+import { thunkedFetchBanks } from '../commons/entities/banks/thunks';
 import styles from './customer.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { thunkedFetchAccounts } from './accounts/thunks';
-import { thunkedFetchCustomer } from './thunks';
+import { thunkedFetchAccounts } from '../commons/entities/accounts/thunks';
+import { thunkedFetchCustomer } from '../commons/entities/customers/thunks';
 
 export function Customer(props) {
     const dispatch = useDispatch();
@@ -26,7 +26,7 @@ export function Customer(props) {
                 customerId
             }));
             await dispatch(thunkedFetchCustomer({
-                customerId
+                identity: customerId
             }));
         })();
     }, []);

@@ -19,7 +19,7 @@ import styles from './contacts.scss';
 export const Contacts = (props) => {
     const dispatch = useDispatch();
     const { byId: contacts, allIds: contactAllIds } = useSelector(state => state.customer.contacts);
-    const { byId: banks } = useSelector(state => state.commons.banks);
+    const { byId: banks } = useSelector(state => state.entities.banks);
 
     useEffect(() => {
         dispatch(thunkedFetchContacts());

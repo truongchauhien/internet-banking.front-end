@@ -1,10 +1,11 @@
 import { fetchCustomerRequest, fetchCustomerFailure, fetchCustomerSuccess } from "./actions";
-import { fetchCustomer } from "../../commons/apis/customers-api";
+import { fetchCustomer } from "../../../../commons/apis/customers-api";
 
 /**
  * 
  * @param {object} payload
- * @param {number} payload.customerId
+ * @param {number|string} payload.identity
+ * @param {'id'|'userName'} payload.identityType
  */
 export const thunkedFetchCustomer = (payload) => async (dispatch,getState) => {
     dispatch(fetchCustomerRequest());

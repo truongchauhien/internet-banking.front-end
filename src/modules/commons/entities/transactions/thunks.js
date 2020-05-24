@@ -3,7 +3,7 @@ import {
     fetchTransactionsFailure,
     fetchTransactionsSuccess
 } from './actions';
-import { fetchTransactions } from '../../../commons/apis/transactions-api';
+import { fetchTransactions } from '../../../../commons/apis/transactions-api';
 
 /**
  * 
@@ -21,7 +21,8 @@ export const thunkedFetchTransactions = (payload) => async (dispatch, getState) 
             ...response.body,
             shouldMerge
         }));
-    } catch {
+    } catch (err) {
+        console.log(err);
         return dispatch(fetchTransactionsFailure());
     }
 };

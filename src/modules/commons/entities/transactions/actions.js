@@ -16,3 +16,9 @@ export const fetchTransactionsSuccess = (payload) => ({
     type: FETCH_TRANSACTIONS_SUCCESS,
     payload
 });
+
+export const FETCH_TRANSACTIONS_INIT = 'FETCH_TRANSACTIONS_INIT';
+export const fetchTransactionsInit = (payload) => ({
+    type: FETCH_TRANSACTIONS_INIT,
+    payload
+});

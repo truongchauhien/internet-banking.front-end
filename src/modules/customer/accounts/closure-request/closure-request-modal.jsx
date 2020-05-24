@@ -8,7 +8,7 @@ import { thunkedCloseAccount } from './thunks';
 
 export const AccountClosureRequestModal = (props) => {
     const dispatch = useDispatch();
-    const { byId: accounts } = useSelector(state => state.customer.accounts);
+    const { byId: accounts } = useSelector(state => state.entities.accounts);
     const { isModalOpen, closedAccountId, inputs, isFetching } = useSelector(state => state.customer.accounts.closureRequest);
 
     const handleClickOutsideModal = () => {

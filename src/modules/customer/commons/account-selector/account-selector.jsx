@@ -13,7 +13,7 @@ import Select from '../../../../commons/components/select/select';
  */
 export const AccountSelector = ({ id, selectedAccountId = '', onAccountSelect, showedTypes = ['CURRENT', 'DEPOSIT'], skippedAccountIds = [] }) => {
     const dispatch = useDispatch();
-    const { byId: accounts, allIds: accountIds } = useSelector(state => state.customer.accounts);
+    const { byId: accounts, allIds: accountIds } = useSelector(state => state.entities.accounts);
     const accountArray = useMemo(() => accountIds.map(id => accounts[id]), [accountIds]);
 
     const accountsByType = useMemo(() => {

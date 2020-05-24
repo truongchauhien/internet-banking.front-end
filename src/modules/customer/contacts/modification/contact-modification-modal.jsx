@@ -14,7 +14,7 @@ export const ContactModificationModal = ({ onSubmit }) => {
 
     const isModalOpen = useSelector(state => state.customer.contacts.contactModification.isModalOpen);
     const { id: contactId, name: contactName, bankId: contactBankId, accountNumber: contactAccountNumber } = useSelector(state => state.customer.contacts.contactModification.fields);
-    const { byId: banks, allIds: bankIds } = useSelector(state => state.commons.banks);
+    const { byId: banks, allIds: bankIds } = useSelector(state => state.entities.banks);
     const bankArray = useMemo(() => {
         const bankArray = bankIds
             .map(id => banks[id])

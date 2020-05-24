@@ -3,12 +3,13 @@ import {
     fetchAccountsSuccess,
     fetchAccountsFailure
 } from './actions';
-import { fetchAccounts } from '../../../commons/apis/accounts-api';
+import { fetchAccounts } from '../../../../commons/apis/accounts-api';
 
 /**
  * 
  * @param {object} payload
- * @param {number} payload.customerId
+ * @param {?number} payload.customerId
+ * @param {?string} payload.customerUserName
  */
 export const thunkedFetchAccounts = (payload) => {
     return async (dispatch, getState) => {        

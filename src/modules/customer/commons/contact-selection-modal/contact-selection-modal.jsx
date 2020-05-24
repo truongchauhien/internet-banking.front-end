@@ -2,6 +2,7 @@ import React, { useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Modal from '../../../../commons/components/modal/modal';
 import { thunkedFetchContacts } from '../../contacts/thunks';
+import BANKS from '../../../../commons/constants/banks';
 import styles from './contact-selection-modal.scss';
 
 export const ContactSelectionModal = ({ isOpen = false, onClickOutside, onContactSelect, types = ['internal', 'external'] }) => {
@@ -12,15 +13,15 @@ export const ContactSelectionModal = ({ isOpen = false, onClickOutside, onContac
     }, []);
 
     const { byId: contacts, allIds: contactIds } = useSelector(state => state.customer.contacts);
-    const { byId: banks } = useSelector(state => state.commons.banks);
+    const { byId: banks } = useSelector(state => state.entities.banks);
     const contactArray = useMemo(() => {
         return contactIds
             .map(id => contacts[id])
             .filter(contact => {
                 const includeInternalContact = types.includes('internal');
                 const includeExternalContact = types.includes('external');
-                if (!contact.bankId && includeInternalContact) return true;
-                if (contact.bankId && includeExternalContact) return true;
+                if (contact.bankId === BANKS.INTERNAL && includeInternalContact) return true;
+                if (contact.bankId !== BANKS.INTERNAL && includeExternalContact) return true;
             });
     }, [contacts, types]);
 
