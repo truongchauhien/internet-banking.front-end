@@ -5,7 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run start:dev",
-    "start:dev": "webpack-dev-server --config webpack.config.development.js"
+    "start:dev": "cross-env NODE_ENV=development webpack-dev-server --config webpack.config.development.js"
   },
   "author": "truongchauhien",
   "license": "ISC",
@@ -17,6 +17,7 @@
     "@babel/preset-react": "^7.9.4",
     "babel-loader": "^8.1.0",
     "convict": "^5.2.0",
+    "cross-env": "^7.0.2",
     "css-loader": "^3.5.3",
     "dotenv": "^8.2.0",
     "node-sass": "^4.14.1",

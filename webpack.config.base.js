@@ -1,5 +1,5 @@
 const path = require('path');
-const envConfigPlugin = require('./webpack.plugin.env-config');
+const configsPlugin = require('./webpack.plugin.configs');
 
 module.exports = {
     entry: {
@@ -42,7 +42,7 @@ module.exports = {
         extensions: ['.js', '.jsx']
     },
     plugins: [
-        envConfigPlugin
+        configsPlugin
     ],
     output: {
         path: path.resolve(__dirname, 'public/assets/scripts'),
