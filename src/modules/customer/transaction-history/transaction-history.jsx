@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import AccountSelector from '../commons/account-selector/account-selector';
 import { thunkedFetchTransactions } from '../../commons/entities/transactions/thunks';
+import { transactionsInit } from '../../commons/entities/transactions/actions';
 import { vnDateTimeFormatter } from '../../../commons/utils/datetime-format-utils';
 import { vndFormatter } from '../../../commons/utils/number-format-utils';
 import styles from './transaction-history.scss';
@@ -26,13 +27,21 @@ export const TransactionHistory = (props) => {
     const [selectedAccountId, setSelectedAccountId] = useState('');
 
     const { byId: transactions, allIds: transactionIds } = useSelector(state => state.entities.transactions);
-    const { hasMore, isFetching} = useSelector(state => state.customer.transactions);
+    const { hasMore, isFetching } = useSelector(state => state.customer.transactions);
+
+    useEffect(() => {
+        return () => {
+            dispatch(transactionsInit());
+        };
+    }, []);
 
     const handleAccountSelectorChange = (selectedValue) => {
         setSelectedAccountId(selectedValue);
         dispatch(thunkedFetchTransactions({
             accountId: selectedValue,
             startingAfter: null
+        }, {
+            mode: 'truncate'
         }));
     };
 
@@ -40,6 +49,8 @@ export const TransactionHistory = (props) => {
         dispatch(thunkedFetchTransactions({
             accountId: selectedAccountId,
             startingAfter: _.last(transactionIds)
+        }, {
+            mode: 'append'
         }));
     };
 
@@ -47,10 +58,10 @@ export const TransactionHistory = (props) => {
         <div>
             <div>
                 <label>Tài khoản: <AccountSelector
-                        selectedAccountId={selectedAccountId}
-                        onAccountSelect={handleAccountSelectorChange}
-                        showedTypes={['CURRENT', 'DEPOSIT']}
-                    />
+                    selectedAccountId={selectedAccountId}
+                    onAccountSelect={handleAccountSelectorChange}
+                    showedTypes={['CURRENT', 'DEPOSIT']}
+                />
                 </label>
             </div>
             <div className={styles.transactionHistoryTable}>

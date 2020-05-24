@@ -10,10 +10,10 @@ export const thunkedFetchCustomerAndAccounts = (payload) => async (dispatch, get
     await dispatch(thunkedFetchCustomer({
         identity: payload.customerUserName,
         identityType: 'userName'
-    }));
+    }, { mode: 'truncate' }));
     const customerId = getState().employee.customerAccounts.customerId;
     if (!customerId) return;
     await dispatch(thunkedFetchAccounts({
         customerId: customerId
-    }));
+    }, { mode: 'truncate' }));
 };

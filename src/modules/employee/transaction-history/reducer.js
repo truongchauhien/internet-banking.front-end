@@ -1,49 +1,20 @@
 import { combineReducers } from "redux";
-import { convertArrayToObject } from "../../../commons/utils/array-utils";
 import {
-    FETCH_TRANSACTION_HISTORY_OF_CUSTOMER_REQUEST,
-    FETCH_TRANSACTION_HISTORY_OF_CUSTOMER_FAILURE,
-    FETCH_TRANSACTION_HISTORY_OF_CUSTOMER_SUCCESS
-} from "./actions";
+    FETCH_TRANSACTIONS_SUCCESS,
+    FETCH_TRANSACTIONS_FAILURE,
+    FETCH_TRANSACTIONS_REQUEST
+} from "../../commons/entities/transactions/actions";
 
 const initState = {
-    byId: {},
-    allIds: [],
     hasMore: false,
     isFetching: false,
-    hasError: false,
-};
-
-const byIdReducer = (state = initState.byId, action) => {
-    switch (action.type) {
-        case FETCH_TRANSACTION_HISTORY_OF_CUSTOMER_SUCCESS:
-            if (action.payload.isFirst) {
-                return convertArrayToObject(action.payload.transactions, 'id');
-            } else {
-                return Object.assign({}, state, convertArrayToObject(action.payload.transactions, 'id'));
-            }
-        default:
-            return state;
-    }
-};
-
-const allIdsReducer = (state = initState.allIds, action) => {
-    switch (action.type) {
-        case FETCH_TRANSACTION_HISTORY_OF_CUSTOMER_SUCCESS:
-            if (action.payload.isFirst) {
-                return action.payload.transactions.map(transaction => transaction.id);
-            } else {
-                return [...state, ...action.payload.transactions.map(transaction => transaction.id)];
-            }
-        default:
-            return state;
-    }
+    error: false,
 };
 
 const hasMoreReducer = (state = initState.hasMore, action) => {
     switch (action.type) {
-        case FETCH_TRANSACTION_HISTORY_OF_CUSTOMER_SUCCESS:
-            return action.payload.hasMore;
+        case FETCH_TRANSACTIONS_SUCCESS:
+            return action.payload.hasMore || false;
         default:
             return state;
     }
@@ -51,34 +22,32 @@ const hasMoreReducer = (state = initState.hasMore, action) => {
 
 const isFetchingReducer = (state = initState.isFetching, action) => {
     switch (action.type) {
-        case FETCH_TRANSACTION_HISTORY_OF_CUSTOMER_REQUEST:
+        case FETCH_TRANSACTIONS_REQUEST:
             return true;
-        case FETCH_TRANSACTION_HISTORY_OF_CUSTOMER_FAILURE:
-        case FETCH_TRANSACTION_HISTORY_OF_CUSTOMER_SUCCESS:
+        case FETCH_TRANSACTIONS_FAILURE:
+        case FETCH_TRANSACTIONS_SUCCESS:
             return false;
         default:
             return state;
     }
 };
 
-const hasErrorReducer = (state = initState.hasError, action) => {
+const errorReducer = (state = initState.error, action) => {
     switch (action.type) {
-        case FETCH_TRANSACTION_HISTORY_OF_CUSTOMER_REQUEST:
-        case FETCH_TRANSACTION_HISTORY_OF_CUSTOMER_SUCCESS:
-            return false;
-        case FETCH_TRANSACTION_HISTORY_OF_CUSTOMER_FAILURE:
-            return true;
+        case FETCH_TRANSACTIONS_REQUEST:
+        case FETCH_TRANSACTIONS_SUCCESS:
+            return null;
+        case FETCH_TRANSACTIONS_FAILURE:
+            return action.payload && action.payload.error || 'unknown';
         default:
             return state;
     }
 };
 
 export const transactionHistoryReducer = combineReducers({
-    byId: byIdReducer,
-    allIds: allIdsReducer,
-    hasMore: hasMoreReducer,
     isFetching: isFetchingReducer,
-    hasError: hasErrorReducer
+    hasMore: hasMoreReducer,
+    error: errorReducer
 });
 
 export default transactionHistoryReducer;

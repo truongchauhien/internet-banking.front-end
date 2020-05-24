@@ -1,22 +1,33 @@
-import { createCustomerRequest, createCustomerFailure, createCustomerSuccess } from "./actions";
-import { createCustomer } from "../../../commons/apis/customers-api";
+import { createCustomerRequest, createCustomerFailure, createCustomerSuccess } from './actions';
+import { createCustomer } from '../../../commons/apis/customers-api';
+import { fetchCustomerSuccess } from '../../commons/entities/customers/actions';
+import { fetchAccountSuccess } from '../../commons/entities/accounts/actions';
 
 /**
  * 
  * @param {object} payload
- * @param {object} payload.userName
- * @param {object} payload.password
- * @param {object} payload.fullName
- * @param {object} payload.email
- * @param {object} payload.phone
+ * @param {string} payload.userName
+ * @param {string} payload.password
+ * @param {string} payload.fullName
+ * @param {string} payload.email
+ * @param {string} payload.phone
+ * @param {object} meta
+ * @param {'truncate'|'append'} meta.mode
  */
-export const thunkedCreateCustomer = (payload) => async (dispatch, getState) => {
+export const thunkedCreateCustomer = (payload, meta) => async (dispatch, getState) => {
     dispatch(createCustomerRequest());
     try {
         const response = await createCustomer(payload);
         if (!response.ok) return dispatch(createCustomerFailure());
+        dispatch(fetchAccountSuccess({
+            account: response.body.account
+        }, { mode: (meta && meta.mode) || 'append' }));
+        dispatch(fetchCustomerSuccess({
+            customer: response.body.customer
+        }, { mode: (meta && meta.mode) || 'append' }));
         return dispatch(createCustomerSuccess(response.body));
-    } catch {
+    } catch (error) {
+        console.error(error);
         return dispatch(createCustomerFailure());
     }
 };

@@ -23,8 +23,15 @@ export const customerCreationInputChange = (payload) => ({
     payload
 });
 
-export const CUSTOMER_CREATION_RESET =  'CUSTOMER_CREATION_RESET';
-export const customerCreationReset = (payload) => ({
-    type: CUSTOMER_CREATION_RESET,
+export const CUSTOMER_CREATION_CLEAR = 'CUSTOMER_CREATION_CLEAR';
+/**
+ * 
+ * @param {object} payload
+ * @param {boolean} payload.inputs
+ * @param {boolean} payload.createdCustomerId
+ * @param {boolean} payload.createdCurrentAccountId
+ */
+export const customerCreationClear = (payload) => ({
+    type: CUSTOMER_CREATION_CLEAR,
     payload
 });

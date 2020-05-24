@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
-import { thunkedFetchTransactionHistory } from './thunks';
 import { vndFormatter } from '../../../commons/utils/number-format-utils';
 import { vnDateTimeFormatter } from '../../../commons/utils/datetime-format-utils';
+import { transactionsInit } from '../../commons/entities/transactions/actions';
+import { thunkedFetchTransactions } from '../../commons/entities/transactions/thunks';
 import styles from './transaction-history.scss';
 
 const TRANSACTIONS_TYPES_DISPLAY = {
@@ -25,24 +26,31 @@ export const TransactionHistory = (props) => {
 
     const [userName, setUserName] = useState('');
 
-    const { byId: transactions, allIds: transactionIds, hasMore, hasError, isFetching } = useSelector(state => state.employee.transactionHistory);
+    const { byId: transactions, allIds: transactionIds } = useSelector(state => state.entities.transactions);
+    const { hasMore, error, isFetching } = useSelector(state => state.employee.transactionHistory);
+
+    useEffect(() => {
+        const cleanUp = () => dispatch(transactionsInit());
+        cleanUp();
+        return () => cleanUp();
+    }, []);
 
     const handleUserNameInputChange = (event) => {
         setUserName(event.target.value);
     };
 
     const handleFetchTransactionHistoryButtonClick = () => {
-        dispatch(thunkedFetchTransactionHistory({
+        dispatch(thunkedFetchTransactions({
             userName,
             startingAfter: null
-        }));
+        }, { mode: 'truncate' }));
     };
 
     const handleSeeMoreTransactionHistoryButtonClick = () => {
-        dispatch(thunkedFetchTransactionHistory({
+        dispatch(thunkedFetchTransactions({
             userName,
             startingAfter: _.last(transactionIds)
-        }));
+        }, { mode: 'append' }));
     };
 
     return (

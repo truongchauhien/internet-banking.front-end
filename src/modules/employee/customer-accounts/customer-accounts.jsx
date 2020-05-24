@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Select from '../../../commons/components/select/select';
 import { thunkedFetchCustomerAndAccounts } from './thunks';
@@ -24,6 +24,16 @@ export const CustomerAccounts = (props) => {
 
     const [customerUserName, setCustomerUserName] = useState('');
     const [accountType, setAccountType] = useState('current');
+
+    useEffect(() => {
+        const cleanUp = () => dispatch(customerAccountCreationClear({
+            clearAccount: true,
+            clearCustomer: true
+        }));
+
+        cleanUp();
+        return () => cleanUp();
+    }, []);
 
     const accountsByType = useMemo(() => {
         const byType = {

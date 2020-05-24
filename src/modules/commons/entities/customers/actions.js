@@ -12,7 +12,21 @@ export const fetchCustomerFailure = (payload) => ({
     payload
 });
 
-export const fetchCustomerSuccess = (payload) => ({
+/**
+ * 
+ * @param {object} payload
+ * @param {object} payload.customer
+ * @param {object} meta
+ * @param {'append'|'truncate'} meta.mode
+ */
+export const fetchCustomerSuccess = (payload, meta) => ({
     type: FETCH_CUSTOMER_SUCCESS,
+    payload,
+    meta: meta || {}
+});
+
+export const CUSTOMERS_INIT = 'CUSTOMERS_INIT';
+export const customerInit = (payload) => ({
+    type: CUSTOMERS_INIT,
     payload
 });

@@ -5,6 +5,7 @@ import DatePicker from 'react-datepicker';
 import styles from './reconciliations.scss';
 import { thunkedFetchReconciliations, thunkedDeleteReconciliation, thunkedCreateReconciliation } from './thunks';
 import { vnDateTimeFormatter } from '../../../commons/utils/datetime-format-utils';
+import BANKS from '../../../commons/constants/banks';
 
 const API_SERVER_URL = `${USE_HTTPS ? 'https' : 'http'}://${API_HOST}:${API_PORT}/api`;
 
@@ -17,6 +18,7 @@ export const Reconciliations = (props) => {
     const { byId: banks, allIds: bankIds } = useSelector(state => state.entities.banks);
     const bankOptions = useMemo(() => {
         const originalOptions = bankIds
+            .filter(id => id !== BANKS.INTERNAL)
             .map(id => banks[id])
             .map(bank => ({ label: bank.name, value: bank.id }));
 

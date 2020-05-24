@@ -9,9 +9,15 @@ const initState = {
 const byIdReducer = (state = initState.byId, action) => {
     switch (action.type) {
         case FETCH_CUSTOMER_SUCCESS:
-            return Object.assign({}, state, {
-                [action.payload.customer.id]: action.payload.customer
-            });
+            if (action?.meta?.mode === 'append') {
+                return Object.assign({}, state, {
+                    [action.payload.customer.id]: action.payload.customer
+                });
+            } else {
+                return {
+                    [action.payload.customer.id]: action.payload.customer
+                }
+            }
         default:
             return state;
     }
@@ -20,10 +26,11 @@ const byIdReducer = (state = initState.byId, action) => {
 const allIdsReducer = (state = initState.allIds, action) => {
     switch (action.type) {
         case FETCH_CUSTOMER_SUCCESS:
-            if (state.includes(action.payload.customer.id)) {
-                return state;
-            } else {
+            if (action?.meta?.mode === 'append') {
                 return [...state, action.payload.customer.id];
+            }
+            else {
+                return [action.payload.customer.id]
             }
         default:
             return state;

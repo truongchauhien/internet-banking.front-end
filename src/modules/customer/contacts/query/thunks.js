@@ -12,7 +12,7 @@ export const thunkedQueryAccount = (payload) => async (dispatch, getState) => {
     try {
         const response = await fetchAccount({
             identityType: 'accountNumber',
-            identityValue: payload.accountNumber,
+            identity: payload.accountNumber,
             bankId: payload.bankId
         });
         if (!response.ok) return dispatch(queryAccountFailure());

@@ -22,11 +22,9 @@ export function Customer(props) {
         document.title = 'Internet Banking: Xin chào';
         (async () => {
             await dispatch(thunkedFetchBanks());
-            await dispatch(thunkedFetchAccounts({
-                customerId
-            }));
-            await dispatch(thunkedFetchCustomer({
-                identity: customerId
+            await dispatch(thunkedFetchAccounts({ customerId }, { mode: 'truncate' }));
+            await dispatch(thunkedFetchCustomer({ identity: customerId, identityType: 'id' }, {
+                mode: 'truncate'
             }));
         })();
     }, []);

@@ -17,19 +17,20 @@ export const thunkedCloseAccount = (payload) => async (dispatch, getState) => {
     try {
         const response = await closeAccount(payload);
         if (!response.ok) return dispatch(closeAccountFailure());
+
         dispatch(closureRequestModalOpenStatusChange(false));
 
         const state = getState();
         const customerId = state.authentication.userData.userId;
         await dispatch(thunkedFetchAccounts({
             customerId
-        }));
+        }, { mode: 'truncate' }));
         if (state.customer.accounts.defaultCurrentAccountId === payload.closedAccountId) {
             await dispatch(thunkedFetchCustomer({
                 customerId
-            }));
+            }, { mode: 'truncate' }));
         }
-
+        
         return dispatch(closeAccountSuccess());
     } catch {
         return dispatch(closeAccountFailure());

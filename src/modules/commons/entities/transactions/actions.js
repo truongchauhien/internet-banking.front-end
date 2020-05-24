@@ -12,13 +12,22 @@ export const fetchTransactionsFailure = (payload) => ({
     payload
 });
 
-export const fetchTransactionsSuccess = (payload) => ({
+/**
+ * 
+ * @param {object} payload
+ * @param {Array} payload.transactions
+ * @param {Array} payload.hasMore
+ * @param {object} meta
+ * @param {'append'|'truncate'} meta.mode
+ */
+export const fetchTransactionsSuccess = (payload, meta) => ({
     type: FETCH_TRANSACTIONS_SUCCESS,
-    payload
+    payload,
+    meta: meta || {}
 });
 
-export const FETCH_TRANSACTIONS_INIT = 'FETCH_TRANSACTIONS_INIT';
-export const fetchTransactionsInit = (payload) => ({
-    type: FETCH_TRANSACTIONS_INIT,
+export const TRANSACTIONS_INIT = 'TRANSACTIONS_INIT';
+export const transactionsInit = (payload) => ({
+    type: TRANSACTIONS_INIT,
     payload
 });

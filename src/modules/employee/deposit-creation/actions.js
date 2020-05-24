@@ -17,8 +17,15 @@ export const depositCreationSuccess = (payload) => ({
     payload
 });
 
-export const DEPOSIT_CREATION_RESET = 'DEPOSIT_CREATION_RESET';
-export const depositCreationReset = (payload) => ({
-    type: DEPOSIT_CREATION_RESET,
+export const DEPOSIT_CREATION_CLEAR = 'DEPOSIT_CREATION_CLEAR';
+/**
+ * 
+ * @param {object} payload
+ * @param {boolean} payload.customerId
+ * @param {boolean} payload.accountId
+ * @param {boolean} payload.createdDepositId
+ */
+export const depositCreationClear = (payload) => ({
+    type: DEPOSIT_CREATION_CLEAR,
     payload
 });

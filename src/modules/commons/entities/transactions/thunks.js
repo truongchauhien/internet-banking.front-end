@@ -8,21 +8,21 @@ import { fetchTransactions } from '../../../../commons/apis/transactions-api';
 /**
  * 
  * @param {object} payload
- * @param {object} payload.accountId
- * @param {object} payload.startingAfter
+ * @param {?number} payload.accountId
+ * @param {?string} payload.userName
+ * @param {number} payload.startingAfter
+ * @param {object} meta
+ * @param {'append'|'truncate'} meta.mode
  */
-export const thunkedFetchTransactions = (payload) => async (dispatch, getState) => {
-    dispatch(fetchTransactionsRequest());
+export const thunkedFetchTransactions = (payload, meta) => async (dispatch, getState) => {
     try {
         const response = await fetchTransactions(payload);
         if (!response.ok) return dispatch(fetchTransactionsFailure());
-        const shouldMerge = payload.startingAfter !== null && payload.startingAfter !== undefined;
-        return dispatch(fetchTransactionsSuccess({
-            ...response.body,
-            shouldMerge
+        return dispatch(fetchTransactionsSuccess(response.body, {
+            mode: meta?.mode || 'truncate'
         }));
-    } catch (err) {
-        console.log(err);
+    } catch (error) {
+        console.error(error);
         return dispatch(fetchTransactionsFailure());
     }
 };

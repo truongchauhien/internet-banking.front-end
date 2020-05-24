@@ -16,13 +16,13 @@ export const fetchAccounts = (payload) => request({
 /**
  * 
  * @param {object} payload
- * @param {number|string} payload.identityValue
+ * @param {number|string} payload.identity
  * @param {'id'|'accountNumber'} payload.identityType
  * @param {?number} payload.bankId
  */
 export const fetchAccount = (payload) => request({
     method: 'GET',
-    resource: `/api/accounts/${payload.identityValue}`,
+    resource: `/api/accounts/${payload.identity}`,
     params: {
         identityType: payload.identityType,
         bankId: payload.bankId 

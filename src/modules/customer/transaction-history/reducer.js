@@ -1,6 +1,5 @@
 import { combineReducers } from "redux";
 import { FETCH_TRANSACTIONS_REQUEST, FETCH_TRANSACTIONS_FAILURE, FETCH_TRANSACTIONS_SUCCESS } from "../../commons/entities/transactions/actions";
-import { convertArrayToObject } from "../../../commons/utils/array-utils";
 
 const initState = {
     hasMore: false,
