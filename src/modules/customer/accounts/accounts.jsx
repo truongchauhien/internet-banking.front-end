@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Accordion from '../../../commons/components/accordion/accordion';
-import { closureRequestModalOpenStatusChange, accountClosureRequestInitialize } from './closure-request/actions';
-import { AccountClosureRequestModal } from './closure-request/closure-request-modal';
-import { vndFormatter } from '../../../commons/utils/number-format-utils.js';
-import { thunkedSetDefaultCurrentAccount } from './default-current-account/thunks';
+import AccountClosureRequestModal from './closure-request/closure-request-modal';
 import ACCOUNT_TYPES from '../../../commons/constants/account-types';
+import { closureRequestModalOpenStatusChange, accountClosureRequestInitialize } from './closure-request/actions';
+import { thunkedSetDefaultCurrentAccount } from './default-current-account/thunks';
+import { thunkedFetchAccounts } from '../../commons/entities/accounts/thunks';
+import { vndFormatter } from '../../../commons/utils/number-format-utils.js';
 import styles from './accounts.scss';
 
 export const Accounts = () => {
@@ -58,6 +59,12 @@ export const Accounts = () => {
         }));
     };
 
+    const handleRefreshButtonClick = () => {
+        dispatch(thunkedFetchAccounts({
+            customerId: customerId
+        }, { mode: 'truncate' }));
+    };
+
     return (
         <div>
             <Accordion>
@@ -87,6 +94,7 @@ export const Accounts = () => {
                     </React.Fragment>
                 ))}
             </Accordion>
+            <button onClick={handleRefreshButtonClick}>Cập nhật ...</button>
             <AccountClosureRequestModal />
         </div>
     )

@@ -55,3 +55,5 @@ export const AccountClosureRequestModal = (props) => {
         </Modal>
     );
 };
+
+export default AccountClosureRequestModal;
