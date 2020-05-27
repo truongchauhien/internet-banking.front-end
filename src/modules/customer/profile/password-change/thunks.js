@@ -1,4 +1,4 @@
-import { createPasswordChangeRequest, createPasswordChangeFailure, createPasswordChangeSuccess } from "./actions";
+import { createPasswordChangeRequest, createPasswordChangeFailure, createPasswordChangeSuccess, passwordChangeInputChange } from "./actions";
 import { updateCustomerPassword } from "../../../../commons/apis/customers-api";
 
 /**

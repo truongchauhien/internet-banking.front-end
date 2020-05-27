@@ -1,21 +1,26 @@
 import { combineReducers } from "redux";
-import { PASSWORD_CHANGE_INPUT_CHANGE, CREATE_PASSWORD_CHANGE_REQUEST, CREATE_PASSWORD_CHANGE_FAILURE, CREATE_PASSWORD_CHANGE_SUCCESS } from "./actions";
+import {
+    PASSWORD_CHANGE_INPUT_CHANGE,
+    CREATE_PASSWORD_CHANGE_REQUEST, CREATE_PASSWORD_CHANGE_FAILURE, CREATE_PASSWORD_CHANGE_SUCCESS
+} from "./actions";
 
 const initState = {
     isFetching: false,
-    inputForm: {
+    inputs: {
         oldPassword: '',
         newPassword: '',
         newPasswordConfirmation: ''
     }
 };
 
-const inputFormReducer = (state = initState.inputForm, action) => {
+const inputsReducer = (state = initState.inputs, action) => {
     switch (action.type) {
         case PASSWORD_CHANGE_INPUT_CHANGE:
             return Object.assign({}, state, {
                 [action.payload.name]: action.payload.value
             });
+        case CREATE_PASSWORD_CHANGE_SUCCESS:
+            return initState.inputs;
         default:
             return state;
     }
@@ -35,7 +40,7 @@ const isFetchingReducer = (state = initState.isFetching, action) => {
 
 export const passwordChangeReducer = combineReducers({
     isFetching: isFetchingReducer,
-    inputForm: inputFormReducer
+    inputs: inputsReducer
 });
 
 export default passwordChangeReducer;
