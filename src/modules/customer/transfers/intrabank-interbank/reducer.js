@@ -10,7 +10,9 @@ import {
 import { CLEAR_INTRABANK_INTERBANK_TRANSFER } from './actions';
 
 const initState = {
-    stage: 'input-information',
+    stage: 'init',
+    isFetching: false,
+    error: null,
     createdTransfer: null
 };
 
@@ -18,33 +20,72 @@ const stageReducer = (state = initState.stage, action) => {
     switch (action.type) {
         case CREATE_INTRABANK_TRANSFER_REQUEST:
         case CREATE_INTERBANK_TRANSFER_REQUEST:
-            return 'creating-transfer';
+            return 'create_transfer_request';
         case CREATE_INTRABANK_TRANSFER_FAILURE:
         case CREATE_INTERBANK_TRANSFER_FAILURE:
-            return 'failed-to-create-transfer';
+            return 'create_transfer_failure';
         case CREATE_INTRABANK_TRANSFER_SUCCESS:
         case CREATE_INTERBANK_TRANSFER_SUCCESS:
-            return 'transfer-created';
+            return 'create_transfer_success';
         case CONFIRM_INTRABANK_TRANSFER_REQUEST:
         case CONFIRM_INTERBANK_TRANSFER_REQUEST:
-            return 'confirming-transfer';
+            return 'confirm_transfer_request';
         case CONFIRM_INTRABANK_TRANSFER_FAILURE:
         case CONFIRM_INTERBANK_TRANSFER_FAILURE:
-            if (!action.payload) {
-                return 'failed-to-confirm-transfer';
-            }
-
-            if (action.payload.code === 'INCORRECT_OTP') {
-                return 'transfer-created';
-            } else {
-                return 'failed-to-confirm-transfer';
-            }
+            return 'confirm_transfer_failure';
         case CONFIRM_INTRABANK_TRANSFER_SUCCESS:
         case CONFIRM_INTERBANK_TRANSFER_SUCCESS:
-            return 'transfer-confirmed';
+            return 'confirm_transfer_success';
         case CLEAR_INTRABANK_INTERBANK_TRANSFER:
+            if (action.payload.stage) {
+                return initState.stage
+            } else {
+                return state;
+            }
+        default:
+            return state;
+    }
+};
+
+const isFetchingReducer = (state = initState.isFetching, action) => {
+    switch (action.type) {
+        case CREATE_INTRABANK_TRANSFER_REQUEST:
+        case CONFIRM_INTRABANK_TRANSFER_REQUEST:
+        case CREATE_INTERBANK_TRANSFER_REQUEST:
+        case CONFIRM_INTERBANK_TRANSFER_REQUEST:
+            return true;
+        case CREATE_INTRABANK_TRANSFER_FAILURE:
+        case CREATE_INTRABANK_TRANSFER_SUCCESS:
+        case CREATE_INTERBANK_TRANSFER_FAILURE:
+        case CREATE_INTERBANK_TRANSFER_SUCCESS:
+            return false;
         case CLEAR_INTRABANK_INTERBANK_TRANSFER:
-            return 'input-information';
+            if (action.payload.isFetching) return initState.isFetching;
+            return state;
+        default:
+            return state;
+    }
+};
+
+const errorReducer = (state = initState.error, action) => {
+    switch (action.type) {
+        case CREATE_INTRABANK_TRANSFER_FAILURE:
+        case CONFIRM_INTRABANK_TRANSFER_FAILURE:
+        case CREATE_INTERBANK_TRANSFER_FAILURE:
+        case CONFIRM_INTERBANK_TRANSFER_FAILURE:
+            return action.payload?.error?.code || 'unknown';
+        case CREATE_INTRABANK_TRANSFER_REQUEST:
+        case CREATE_INTRABANK_TRANSFER_SUCCESS:
+        case CONFIRM_INTRABANK_TRANSFER_REQUEST:
+        case CONFIRM_INTRABANK_TRANSFER_SUCCESS:
+        case CREATE_INTERBANK_TRANSFER_REQUEST:
+        case CREATE_INTERBANK_TRANSFER_SUCCESS:
+        case CONFIRM_INTERBANK_TRANSFER_REQUEST:
+        case CONFIRM_INTERBANK_TRANSFER_SUCCESS:
+            return null;
+        case CLEAR_INTRABANK_INTERBANK_TRANSFER:
+            if (action.payload.error) return initState.error;
+            return state;
         default:
             return state;
     }
@@ -54,7 +95,10 @@ const createdTransferReducer = (state = initState.createdTransfer, action) => {
     switch (action.type) {
         case CREATE_INTRABANK_TRANSFER_SUCCESS:
         case CREATE_INTERBANK_TRANSFER_SUCCESS:
-            return action.payload;
+            return action.payload.transfer;
+        case CLEAR_INTRABANK_INTERBANK_TRANSFER:
+            if (action.payload.createdTransfer) return initState.createdTransfer;
+            return state;
         default:
             return state;
     }
@@ -62,6 +106,8 @@ const createdTransferReducer = (state = initState.createdTransfer, action) => {
 
 export const intrabankInterbankReducer = combineReducers({
     stage: stageReducer,
+    isFetching: isFetchingReducer,
+    error: errorReducer,
     createdTransfer: createdTransferReducer
 });
 

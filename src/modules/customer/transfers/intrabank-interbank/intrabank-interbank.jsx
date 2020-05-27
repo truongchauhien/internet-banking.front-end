@@ -26,8 +26,7 @@ const IntrabankInterbank = (props) => {
 
     const { byId: accounts, allIds: accountIds } = useSelector(state => state.entities.accounts);
     const { byId: contacts, allIds: contactIds, query: accountQuery } = useSelector(state => state.customer.contacts);
-    const stage = useSelector(state => state.customer.transfers.intrabankInterbank.stage);
-    const transfer = useSelector(state => state.customer.transfers.intrabankInterbank.createdTransfer);
+    const { stage, error, createdTransfer } = useSelector(state => state.customer.transfers.intrabankInterbank);
 
     const [selectedAccountId, setSelectedAccountId] = useState('');
 
@@ -104,10 +103,12 @@ const IntrabankInterbank = (props) => {
     };
 
     const handleContactSelectionModalSelectContact = (selectContactId) => {
-        const selectedAccountNumber = contacts[selectContactId].accountNumber;
-        setBeneficiaryAccountNumber(selectedAccountNumber);
+        const selectedContact = contacts[selectContactId];
+        setBeneficiaryAccountNumber(selectedContact.accountNumber);
+        setBeneficiaryBankId(selectedContact.bankId);
+
         setIsContactSelectionModalOpen(false);
-        if (accountQuery.whoAndWhere.accountNumber !== selectedAccountNumber) {
+        if (accountQuery.whoAndWhere.accountNumber !== selectedContact.accountNumber) {
             dispatch(queryAccountInit());
             setQueryAccountButtonEnable(true);
         }
@@ -170,8 +171,15 @@ const IntrabankInterbank = (props) => {
         }
     };
 
-    const handleCleanUpClick = () => {
-        dispatch(clearIntrabankInterbankTransfer());
+    const handleTryAgainButtonClick = () => {
+        dispatch(clearIntrabankInterbankTransfer({
+            stage: true,
+            isFetching: true,
+            error: true,
+            createdTransfer: true
+        }));
+
+        setOtp('');
     };
 
     const handleOtpInputChange = (event) => {
@@ -182,23 +190,50 @@ const IntrabankInterbank = (props) => {
         if (beneficiaryBankId == BANKS.INTERNAL) {
             dispatch(thunkedConfirmIntrabankTransfer({
                 otp: Number.parseInt(otp),
-                transferId: transfer.id
+                transferId: createdTransfer.id
             }));
         } else {
             dispatch(thunkedConfirmInterbankTransfer({
                 otp: Number.parseInt(otp),
-                transferId: transfer.id
+                transferId: createdTransfer.id
             }));
         }
     };
 
-    const handleResetTransferUIButtonClick = () => {
-        dispatch(clearIntrabankInterbankTransfer());
+    const handleFinishButtonClick = () => {
+        dispatch(clearIntrabankInterbankTransfer({
+            stage: true,
+            isFetching: true,
+            error: true,
+            createdTransfer: true
+        }));
+
+        setBeneficiaryAccountNumber('');
+        setBeneficiaryBankId(BANKS.INTERNAL);
+        setBeneficiaryAccountHolderName('');
+        
+        setQueryAccountButtonEnable(true);
+        setAddToContactsButtonEnable(false);
+
+        setAmount(0);
+        setMessage('');
+        setWhoPayFee('sender');
+        setOtp('');
     };
+
+    const otpConfirmationRender = () => (
+        <div>
+            <fieldset>
+                <legend>Xác thực OTP</legend>
+                <input onChange={handleOtpInputChange} value={otp} />
+                <button onClick={handleConfirmTransferClick}>Xác nhận</button>
+            </fieldset>
+        </div>
+    );
 
     return (
         <div>
-            {stage === 'input-information' &&
+            {stage === 'init' &&
                 <div>
                     <fieldset>
                         <legend>Tài khoản chuyển</legend>
@@ -264,48 +299,44 @@ const IntrabankInterbank = (props) => {
                     <button onClick={handleCreateTransferButtonClick}>Chấp nhận</button>
                 </div>
             }
-            {stage === 'creating-transfer' &&
+            {stage === 'create_transfer_request' &&
                 <div>
                     <Loader />
                     <p>Lệnh chuyển tiền đang được tạo ...</p>
                 </div>
             }
-            {stage === 'failed-to-create-transfer' &&
+            {stage === 'create_transfer_failure' &&
                 <div>
                     <Message>
                         <Message.Header>Lỗi</Message.Header>
                         <p>Có lỗi xảy ra trong quá trình tạo giao dịch.</p>
                     </Message>
-                    <button onClick={handleCleanUpClick}>Quay lại</button>
+                    <button onClick={handleTryAgainButtonClick}>Quay lại</button>
                 </div>
             }
-            {stage === 'transfer-created' &&
-                <div>
-                    <fieldset>
-                        <legend>Xác thực OTP</legend>
-                        <input onChange={handleOtpInputChange} value={otp} />
-                        <button onClick={handleConfirmTransferClick}>Xác nhận</button>
-                    </fieldset>
-                </div>
-            }
-            {stage === 'confirming-transfer' &&
+            {stage === 'create_transfer_success' && otpConfirmationRender()}
+            {stage === 'confirm_transfer_request' &&
                 <div>
                     <Loader />
                     <p>Đang xác thực ...</p>
                 </div>
             }
-            {
-                stage === 'failed-to-confirm-transfer' &&
-                <div>
-                    <p>Chuyển khoản thất bại!</p>
-                    <button>Tiếp tục</button>
-                </div>
+            {stage === 'confirm_transfer_failure' &&
+                <React.Fragment>
+                    {error === 'INCORRECT_OTP' && otpConfirmationRender()}
+                    {error === 'unknown' &&
+                        <div>
+                            <p>Chuyển khoản thất bại!</p>
+                            <button onClick={handleTryAgainButtonClick}>Tiếp tục</button>
+                        </div>
+                    }
+                </React.Fragment>
             }
             {
-                stage === 'transfer-confirmed' &&
+                stage === 'confirm_transfer_success' &&
                 <div>
                     <p>Chuyển khoản thành công!</p>
-                    <button onClick={handleResetTransferUIButtonClick}>Tiếp tục</button>
+                    <button onClick={handleFinishButtonClick}>Tiếp tục</button>
                 </div>
             }
         </div>

@@ -5,6 +5,7 @@ import {
 import {
     createIntrabankTransfer, confirmIntrabankTransfer
 } from '../../../../../commons/apis/transfer-api';
+import { thunkedFetchAccount } from '../../../../commons/entities/accounts/thunks';
 
 /**
  * 
@@ -20,8 +21,8 @@ export const thunkedCreateIntrabankTransfer = (payload) => {
         dispatch(createIntrabankTransferRequest(payload));
         try {
             const response = await createIntrabankTransfer(payload);
-            if (!response.ok) return dispatch(createIntrabankTransferFailure());
-            return dispatch(createIntrabankTransferSuccess(response.body.transfer));
+            if (!response.ok) return dispatch(createIntrabankTransferFailure(response.body));
+            return dispatch(createIntrabankTransferSuccess(response.body));
         } catch {
             return dispatch(createIntrabankTransferFailure());
         }
@@ -34,17 +35,18 @@ export const thunkedCreateIntrabankTransfer = (payload) => {
  * @param {string} payload.otp
  * @param {number} payload.transferId
  */
-export const thunkedConfirmIntrabankTransfer = (payload) => {
-    return async (dispatch, getState) => {
-        dispatch(confirmIntrabankTransferRequest());
-        try {
-            const response = await confirmIntrabankTransfer(payload);
-            if (!response.ok) {
-                return dispatch(confirmIntrabankTransferFailure(response.body))
-            }
-            return dispatch(confirmIntrabankTransferSuccess());
-        } catch {
-            return dispatch(confirmIntrabankTransferFailure());
+export const thunkedConfirmIntrabankTransfer = (payload) => async (dispatch, getState) => {
+    dispatch(confirmIntrabankTransferRequest());
+    try {
+        const response = await confirmIntrabankTransfer(payload);
+        if (!response.ok) return dispatch(confirmIntrabankTransferFailure(response.body))
+        const fromAccountNumber = getState().customer.transfers.intrabankInterbank.createdTransfer?.fromAccountNumber;
+        if (fromAccountNumber) {
+            await dispatch(thunkedFetchAccount({ identity: fromAccountNumber, identityType: 'accountNumber' }, { mode: 'append' }));
         }
-    };
+        return dispatch(confirmIntrabankTransferSuccess());
+    } catch (error) {
+        console.log(error);
+        return dispatch(confirmIntrabankTransferFailure());
+    }
 };

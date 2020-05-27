@@ -5,6 +5,7 @@ import {
 import {
     createInterbankTransfer, confirmInterbankTransfer
 } from '../../../../../commons/apis/transfer-api';
+import { thunkedFetchAccount } from '../../../../commons/entities/accounts/thunks';
 
 /**
  * 
@@ -21,9 +22,8 @@ export const thunkedCreateInterbankTransfer = (payload) => {
         dispatch(createInterbankTransferRequest(payload));
         try {
             const response = await createInterbankTransfer(payload);
-            console.log(response);
-            if (!response.ok) return dispatch(createInterbankTransferFailure());
-            return dispatch(createInterbankTransferSuccess(response.body.transfer));
+            if (!response.ok) return dispatch(createInterbankTransferFailure(response.body));
+            return dispatch(createInterbankTransferSuccess(response.body));
         } catch {
             return dispatch(createInterbankTransferFailure());
         }
@@ -41,9 +41,14 @@ export const thunkedConfirmInterbankTransfer = (payload) => {
         dispatch(confirmInterbankTransferRequest());
         try {
             const response = await confirmInterbankTransfer(payload);
-            if (!response.ok) return dispatch(confirmInterbankTransferFailure(response.body))
+            if (!response.ok) return dispatch(confirmInterbankTransferFailure(response.body));
+            const fromAccountNumber = getState().customer.transfers.intrabankInterbank.createdTransfer?.fromAccountNumber;
+            if (fromAccountNumber) {
+                await dispatch(thunkedFetchAccount({ identity: fromAccountNumber, identityType: 'accountNumber' }, { mode: 'append' }));
+            }
             return dispatch(confirmInterbankTransferSuccess());
-        } catch {
+        } catch (error) {
+            console.log(error);
             return dispatch(confirmInterbankTransferFailure());
         }
     };
