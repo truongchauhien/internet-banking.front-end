@@ -22,6 +22,18 @@
                     border-bottom: 1px solid;
                     border-left: 1px solid;
                 }
+
+                .credit-transaction {
+                    background-color: #4E8FD8;
+                    color: white;
+                    font-weight: bold;
+                }
+    
+                .debit-transaction {
+                    background-color: red;
+                    color: white;
+                    font-weight: bold;
+                }
             }
         }
     }

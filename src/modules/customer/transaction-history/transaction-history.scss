@@ -20,6 +20,18 @@
             tr td:nth-child(3) {
                 text-align: center;
             }
+
+            .credit-transaction {
+                background-color: #4E8FD8;
+                color: white;
+                font-weight: bold;
+            }
+
+            .debit-transaction {
+                background-color: red;
+                color: white;
+                font-weight: bold;
+            }
         }
     }
 }

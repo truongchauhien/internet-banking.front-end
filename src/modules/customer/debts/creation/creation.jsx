@@ -13,6 +13,10 @@ import ContactCreationModal from '../../contacts/creation/contact-creation-modal
 export const DebtCreation = (props) => {
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        dispatch(queryAccountInit());
+    }, []);
+
     const { byId: contacts, allIds: contactIds, query: accountQuery } = useSelector(state => state.customer.contacts);
 
     const [isContactSelectionModalOpen, setIsContactSelectionModalOpen] = useState(false);
@@ -151,7 +155,7 @@ export const DebtCreation = (props) => {
             </fieldset>
             <fieldset>
                 <legend>Nội dung</legend>
-                <textarea value={message} onChange={handleMessageInputChange} />
+                <textarea style={{ width: '100%' }} value={message} onChange={handleMessageInputChange} />
             </fieldset>
             <button onClick={handleSubmitButtonClick}>Gửi nhắc nợ</button>
         </div>

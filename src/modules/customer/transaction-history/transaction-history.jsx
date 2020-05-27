@@ -78,7 +78,9 @@ export const TransactionHistory = (props) => {
                             <tr key={transaction.id}>
                                 <td>{vnDateTimeFormatter.format(new Date(transaction.createdAt))}</td>
                                 <td>{TRANSACTIONS_TYPES_DISPLAY[transaction.type]}</td>
-                                <td>{vndFormatter.format(transaction.amount)}</td>
+                                <td className={transaction.amount >= 0 ? styles.creditTransaction : styles.debitTransaction}>
+                                    {vndFormatter.format(transaction.amount)}
+                                </td>
                             </tr>
                         ))}
                     </tbody>
