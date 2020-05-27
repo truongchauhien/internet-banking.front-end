@@ -13,14 +13,9 @@ const initState = {
 
 const doingTransferForDebtIdReducer = (state = initState.doingTransferForDebtId, action) => {
     switch (action.type) {
-        case PAYDEBT_TRANSFER_CREATE_REQUEST:
-            return action.payload.debtId;
-        case PAYDEBT_TRANSFER_CREATE_FAILURE:
-            return null;
         case PAYDEBT_TRANSFER_CREATE_SUCCESS:
             return action.payload.debtId;
-        case PAYDEBT_TRANSFER_CONFIRM_FAILURE:
-            return state;
+        case PAYDEBT_TRANSFER_CREATE_FAILURE:
         case PAYDEBT_TRANSFER_CONFIRM_SUCCESS:
             return null;
         default:

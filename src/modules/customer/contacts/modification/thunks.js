@@ -7,10 +7,7 @@ export const thunkedPatchContact = ({ id, ...payload }) => {
         try {
             const response = await patchContact({ id, ...payload });
             if (!response.ok) return dispatch(patchContactFailure());
-            return dispatch(patchContactSuccess({
-                id,
-                ...payload
-            }));
+            return dispatch(patchContactSuccess(response.body));
         } catch {
             return dispatch(patchContactFailure());
         }

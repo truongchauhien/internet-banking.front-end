@@ -12,9 +12,7 @@ import Select from '../../../../commons/components/select/select';
  * @param {['CURRENT', 'DEPOSIT']} payload.showedTypes
  */
 export const AccountSelector = ({ id, selectedAccountId = '', onAccountSelect, showedTypes = ['CURRENT', 'DEPOSIT'], skippedAccountIds = [] }) => {
-    const dispatch = useDispatch();
     const { byId: accounts, allIds: accountIds } = useSelector(state => state.entities.accounts);
-    const accountArray = useMemo(() => accountIds.map(id => accounts[id]), [accountIds]);
 
     const accountsByType = useMemo(() => {
         const byType = {
@@ -38,10 +36,6 @@ export const AccountSelector = ({ id, selectedAccountId = '', onAccountSelect, s
         }
         return byType;
     }, [accounts, skippedAccountIds]);
-
-    useEffect(() => {
-
-    }, []);
 
     const handleOnChange = (selectedValue) => {
         onAccountSelect && onAccountSelect(selectedValue);

@@ -21,15 +21,6 @@ export const ContactCreationModal = ({ onSubmit }) => {
     } = useSelector(state => state.customer.contacts.contactCreation.fields);
     const isModalOpen = useSelector(state => state.customer.contacts.contactCreation.isModalOpen);
 
-    const { byId: banks, allIds: bankIds } = useSelector(state => state.entities.banks);
-    const bankArray = useMemo(() => {
-        const bankArray = bankIds
-            .map(id => banks[id])
-            .map(bank => ({ label: bank.name, value: bank.id }));
-
-        return [{ value: '', label: 'Tài khoản nội bộ' }, ...bankArray];
-    }, [banks]);
-
     const handleContactAccountNumberInputChange = (event) => {
         dispatch(contactCreationInputChange({
             field: 'accountNumber',

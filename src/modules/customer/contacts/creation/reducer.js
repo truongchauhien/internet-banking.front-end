@@ -4,12 +4,13 @@ import {
     CONTACT_CREATION_MODAL_OPEN_STATUS_CHANGE,
     CONTACT_CREATION_INIT
 } from "./actions";
+import BANKS from "../../../../commons/constants/banks";
 
 const initState = {
     fields: {
         name: '',
         accountNumber: '',
-        bankId: ''
+        bankId: BANKS.INTERNAL
     },
     isModalOpen: false
 };

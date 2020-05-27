@@ -43,6 +43,7 @@ const allIdsReducer = (state = initState.allIds, action) => {
             }
         case FETCH_ACCOUNT_SUCCESS:
             if (action.meta.mode === 'append') {
+                if (state.includes(action.payload.account.id)) return state;
                 return [...state, action.payload.account.id];
             } else {
                 return [action.payload.account.id];

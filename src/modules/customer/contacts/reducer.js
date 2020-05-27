@@ -21,7 +21,7 @@ import queryReducer from './query/reducer';
 
 const initState = {
     byId: {},
-    allIds: []    
+    allIds: []
 };
 
 const byIdReducer = (state = initState.byId, action) => {
@@ -54,7 +54,7 @@ const byIdReducer = (state = initState.byId, action) => {
             return _.omit(state, action.payload.id);
         case PATCH_CONTACT_SUCCESS:
             return _.merge({}, state, {
-                [action.payload.id]: action.payload
+                [action.payload.contact.id]: action.payload.contact
             });
         default:
             return state;
